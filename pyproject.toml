@@ -9,9 +9,16 @@ dependencies = [
     "motor",
     "sqlalchemy",
     "pandas",
-    "pydantic-settings",
-    "python-dotenv"
+    "pydantic>=2.0",
+    "pydantic-settings>=2.0",
+    "python-dotenv",
+    "aiohttp",
+    "beautifulsoup4",
+    "twilio",
+    "fastapi",
+    "uvicorn"
 ]
 
 [project.optional-dependencies]
 dev = ["sphinx", "sphinx-rtd-theme", "myst-parser", "sphinx-multiversion"]
+docs = ["sphinx", "sphinx-rtd-theme", "myst-parser"]
