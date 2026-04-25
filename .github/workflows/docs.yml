@@ -24,6 +24,7 @@ jobs:
         run: |
           uv sync --all-extras
           cd docs && uv run sphinx-multiversion source/ build/html
+          echo '<!DOCTYPE html><html><head><title>Redirecting</title><meta http-equiv="refresh" content="0; url=main/index.html"></head><body><p>Redirecting to <a href="main/index.html">main/index.html</a></p></body></html>' > build/html/index.html
 
       - name: Deploy
         uses: JamesIves/github-pages-deploy-action@v4
