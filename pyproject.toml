@@ -22,3 +22,9 @@ dependencies = [
 [project.optional-dependencies]
 dev = ["sphinx<7.2", "sphinx-rtd-theme", "myst-parser", "sphinxcontrib-httpdomain", "sphinxcontrib-mermaid"]
 docs = ["sphinx<7.2", "sphinx-rtd-theme", "myst-parser", "sphinxcontrib-httpdomain", "sphinxcontrib-mermaid"]
+
+[dependency-groups]
+dev = [
+    "detect-secrets>=1.5.0",
+    "pre-commit>=4.6.0",
+]
