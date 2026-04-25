@@ -17,4 +17,4 @@ NotificationService
 .. autoclass:: NotificationService
    :members:
    :undoc-members:
-   :show-inheritance:
+   :show-inheritance:

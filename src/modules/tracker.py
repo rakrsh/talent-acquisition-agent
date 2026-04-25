@@ -1,17 +1,18 @@
 """Application tracker - records all job applications locally."""
+
 import json
+from dataclasses import asdict, dataclass
 from datetime import datetime
 from pathlib import Path
-from dataclasses import dataclass, asdict
 from typing import Optional
 
-from config import logger
 from settings import get_settings
 
 
 @dataclass
 class JobApplication:
     """Record of a job application."""
+
     title: str
     company: str
     location: str
@@ -24,10 +25,10 @@ class JobApplication:
 
 class ApplicationTracker:
     """Tracks all job applications in a local JSON file."""
-    
-    def __init__(self, data_path: str = None):
+
+    def __init__(self, data_path: Optional[str] = None):
         settings = get_settings()
-        
+
         if data_path:
             self.data_path = Path(data_path)
         else:
@@ -35,10 +36,10 @@ class ApplicationTracker:
             data_dir = Path(settings.data_dir)
             data_dir.mkdir(parents=True, exist_ok=True)
             self.data_path = data_dir / "applications.json"
-        
+
         self.data_path.parent.mkdir(parents=True, exist_ok=True)
         self.applications: list[JobApplication] = self._load()
-    
+
     def _load(self) -> list[JobApplication]:
         """Load applications from JSON file."""
         if self.data_path.exists():
@@ -46,19 +47,19 @@ class ApplicationTracker:
                 data = json.load(f)
                 return [JobApplication(**app) for app in data]
         return []
-    
+
     def _save(self) -> None:
         """Save applications to JSON file."""
         with open(self.data_path, "w") as f:
             json.dump([asdict(app) for app in self.applications], f, indent=2)
-    
+
     def add_application(self, job) -> bool:
         """Record a new job application."""
         # Check if already applied
         if any(app.url == job.url for app in self.applications):
             print(f"Already applied: {job.title} @ {job.company}")
             return False
-        
+
         application = JobApplication(
             title=job.title,
             company=job.company,
@@ -66,20 +67,20 @@ class ApplicationTracker:
             url=job.url,
             source=job.source,
             applied_date=datetime.now().isoformat(),
-            status="applied"
+            status="applied",
         )
-        
+
         self.applications.append(application)
         self._save()
         print(f"Recorded: {job.title} @ {job.company}")
         return True
-    
+
     def get_applications(self, status: Optional[str] = None) -> list[JobApplication]:
         """Get all applications, optionally filtered by status."""
         if status:
             return [app for app in self.applications if app.status == status]
         return self.applications
-    
+
     def update_status(self, url: str, status: str, notes: str = "") -> bool:
         """Update application status."""
         for app in self.applications:
@@ -89,7 +90,7 @@ class ApplicationTracker:
                 self._save()
                 return True
         return False
-    
+
     def get_summary(self) -> dict:
         """Get application statistics."""
         return {
@@ -99,19 +100,32 @@ class ApplicationTracker:
             "interview": len([a for a in self.applications if a.status == "interview"]),
             "rejected": len([a for a in self.applications if a.status == "rejected"]),
         }
-    
-    def export_csv(self, output_path: str = None) -> str:
+
+    def export_csv(self, output_path: Optional[str] = None) -> str:
         """Export applications to CSV."""
         if output_path is None:
-            output_path = self.data_path.with_suffix(".csv")
-        
+            output_path = str(self.data_path.with_suffix(".csv"))
+
         import csv
+
         with open(output_path, "w", newline="", encoding="utf-8") as f:
-            writer = csv.DictWriter(f, fieldnames=["title", "company", "location", "url", "source", "applied_date", "status", "notes"])
+            writer = csv.DictWriter(
+                f,
+                fieldnames=[
+                    "title",
+                    "company",
+                    "location",
+                    "url",
+                    "source",
+                    "applied_date",
+                    "status",
+                    "notes",
+                ],
+            )
             writer.writeheader()
             for app in self.applications:
                 writer.writerow(asdict(app))
-        
+
         return str(output_path)
 
 
