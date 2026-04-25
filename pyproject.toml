@@ -1,0 +1,17 @@
+[project]
+name = "talent-acquisition-agent"
+version = "0.1.0"
+description = "Open Source Agentic AI Job Search Engine"
+dependencies = [
+    "langchain",
+    "langchain-community",
+    "playwright",
+    "motor",
+    "sqlalchemy",
+    "pandas",
+    "pydantic-settings",
+    "python-dotenv"
+]
+
+[project.optional-dependencies]
+dev = ["sphinx", "sphinx-rtd-theme", "myst-parser", "sphinx-multiversion"]

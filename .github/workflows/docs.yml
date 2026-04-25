@@ -1,0 +1,23 @@
+name: Deploy Multi-Version Docs
+on:
+  push:
+    tags: ['v*']
+    branches: [main]
+jobs:
+  build-docs:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Install uv
+        run: curl -LsSf https://astral.sh/uv/install.sh | sh
+      - name: Build
+        run: |
+          uv sync --dev
+          cd docs && uv run sphinx-multiversion source/ build/html
+      - name: Deploy
+        uses: JamesIves/github-pages-deploy-action@v4
+        with:
+          folder: docs/build/html
+          branch: gh-pages
