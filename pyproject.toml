@@ -20,5 +20,5 @@ dependencies = [
 ]
 
 [project.optional-dependencies]
-dev = ["sphinx<7.2", "sphinx-rtd-theme", "myst-parser", "sphinx-multiversion", "sphinxcontrib-httpdomain", "sphinxcontrib-mermaid"]
+dev = ["sphinx<7.2", "sphinx-rtd-theme", "myst-parser", "sphinxcontrib-httpdomain", "sphinxcontrib-mermaid"]
 docs = ["sphinx<7.2", "sphinx-rtd-theme", "myst-parser", "sphinxcontrib-httpdomain", "sphinxcontrib-mermaid"]
