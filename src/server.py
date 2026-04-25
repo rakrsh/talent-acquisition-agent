@@ -1,15 +1,15 @@
 """HTTP Server - 12-Factor App Factor VII: Port Binding."""
-from fastapi import FastAPI, HTTPException
-from pydantic import BaseModel
-from typing import Optional, List
-import uvicorn
-from contextlib import asynccontextmanager
 
-from settings import get_settings
+from contextlib import asynccontextmanager
+from typing import List, Optional
+
+import uvicorn
 from config import logger
+from fastapi import FastAPI, HTTPException
 from modules.job_search import JobSearcher
-from modules.notifications import NotificationService
 from modules.tracker import ApplicationTracker
+from pydantic import BaseModel
+from settings import get_settings
 
 
 # =============================================================================
@@ -27,7 +27,7 @@ app = FastAPI(
     title="Job Agent API",
     description="Talent Acquisition Agent - 12-Factor App compliant",
     version="1.1.0",
-    lifespan=lifespan
+    lifespan=lifespan,
 )
 
 
@@ -61,11 +61,7 @@ class ApplicationRequest(BaseModel):
 @app.get("/")
 async def root():
     """Health check - Factor VII: Port Binding."""
-    return {
-        "service": "job-agent",
-        "version": "1.1.0",
-        "status": "running"
-    }
+    return {"service": "job-agent", "version": "1.1.0", "status": "running"}
 
 
 @app.get("/health")
@@ -79,19 +75,22 @@ async def search_jobs():
     """Search for jobs - triggers job search pipeline."""
     settings = get_settings()
     searcher = JobSearcher()
-    
+
     jobs = await searcher.search_all()
-    
+
     return {
         "count": len(jobs),
-        "jobs": [JobResponse(
-            title=j.title,
-            company=j.company,
-            location=j.location,
-            url=j.url,
-            source=j.source,
-            posted_date=j.posted_date
-        ) for j in jobs[:settings.max_jobs_per_search]]
+        "jobs": [
+            JobResponse(
+                title=j.title,
+                company=j.company,
+                location=j.location,
+                url=j.url,
+                source=j.source,
+                posted_date=j.posted_date,
+            )
+            for j in jobs[: settings.max_jobs_per_search]
+        ],
     }
 
 
@@ -100,19 +99,15 @@ async def get_applications():
     """Get all tracked applications."""
     tracker = ApplicationTracker()
     apps = tracker.get_applications()
-    
-    return {
-        "count": len(apps),
-        "summary": tracker.get_summary(),
-        "applications": apps
-    }
+
+    return {"count": len(apps), "summary": tracker.get_summary(), "applications": apps}
 
 
 @app.post("/applications")
 async def add_application(app: ApplicationRequest):
     """Record a new job application."""
     tracker = ApplicationTracker()
-    
+
     # Create a job-like object
     class TempJob:
         def __init__(self, title, company, location, url, source):
@@ -121,17 +116,17 @@ async def add_application(app: ApplicationRequest):
             self.location = location
             self.url = url
             self.source = source
-    
+
     job = TempJob(
         title=app.title,
         company=app.company,
         location=app.location,
         url=app.url,
-        source=app.source
+        source=app.source,
     )
-    
+
     success = tracker.add_application(job)
-    
+
     if success:
         return {"status": "recorded", "url": app.url}
     raise HTTPException(status_code=409, detail="Already applied")
@@ -142,16 +137,16 @@ async def get_application_status(url: str):
     """Get status of a specific application."""
     tracker = ApplicationTracker()
     apps = tracker.get_applications()
-    
+
     for app in apps:
         if app.url == url:
             return {
                 "url": url,
                 "status": app.status,
                 "applied_date": app.applied_date,
-                "notes": app.notes
+                "notes": app.notes,
             }
-    
+
     raise HTTPException(status_code=404, detail="Application not found")
 
 
@@ -160,7 +155,7 @@ async def update_application_status(url: str, status: str, notes: str = ""):
     """Update application status."""
     tracker = ApplicationTracker()
     success = tracker.update_status(url, status, notes)
-    
+
     if success:
         return {"status": "updated", "url": url, "new_status": status}
     raise HTTPException(status_code=404, detail="Application not found")
@@ -173,12 +168,12 @@ def run_server():
     """Run the HTTP server."""
     settings = get_settings()
     logger.info(f"Starting HTTP server on {settings.http_host}:{settings.http_port}")
-    
+
     uvicorn.run(
         "server:app",
         host=settings.http_host,
         port=settings.http_port,
-        log_level=settings.log_level.lower()
+        log_level=settings.log_level.lower(),
     )
 
 

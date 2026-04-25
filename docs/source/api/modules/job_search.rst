@@ -17,4 +17,4 @@ JobSearcher Class
 .. autoclass:: JobSearcher
    :members:
    :undoc-members:
-   :show-inheritance:
+   :show-inheritance:

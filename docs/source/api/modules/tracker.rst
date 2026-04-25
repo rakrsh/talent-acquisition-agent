@@ -17,4 +17,4 @@ ApplicationTracker
 .. autoclass:: ApplicationTracker
    :members:
    :undoc-members:
-   :show-inheritance:
+   :show-inheritance:
