@@ -1,3 +1,8 @@
+import os
+import sys
+
+sys.path.insert(0, os.path.abspath('../../src'))
+
 # Configuration file for Sphinx documentation
 project = 'Job Agent'
 copyright = '2026, Job Agent'
@@ -9,13 +14,16 @@ extensions = [
     'sphinx.ext.viewcode',
     'sphinx.ext.napoleon',
     'myst_parser',
+    'sphinx_multiversion',
+    'sphinxcontrib.httpdomain',
+    'sphinxcontrib.mermaid',
 ]
 
 templates_path = ['_templates']
 exclude_patterns = ['_build', 'Thumbs.db', '.DS_Store']
 
 html_theme = 'sphinx_rtd_theme'
-html_static_path = ['_static']
+html_static_path = []
 
 # Napoleon settings
 napoleon_google_docstring = True

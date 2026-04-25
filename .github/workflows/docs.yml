@@ -3,6 +3,7 @@ on:
   push:
     tags: ['v*']
     branches: [main]
+  workflow_dispatch:
 jobs:
   build-docs:
     runs-on: ubuntu-latest
@@ -14,7 +15,7 @@ jobs:
         run: curl -LsSf https://astral.sh/uv/install.sh | sh
       - name: Build
         run: |
-          uv sync --dev
+          uv sync --all-extras
           cd docs && uv run sphinx-multiversion source/ build/html
       - name: Deploy
         uses: JamesIves/github-pages-deploy-action@v4
