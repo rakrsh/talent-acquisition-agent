@@ -149,18 +149,35 @@ except:
 
 ---
 
-## 7. Testing Guidelines
+## 7. Testing Guidelines & Best Practices
 
-- Test files go in `tests/` (not yet created — create it when adding tests).
-- Use `pytest` + `pytest-asyncio` for async tests.
-- Mock external HTTP calls with `aioresponses` or `unittest.mock.AsyncMock`.
-- Never make real network calls in tests — use fixtures.
-- Settings override pattern for tests:
-  ```python
-  from unittest.mock import patch
-  with patch("settings.settings", Settings(env_mode="test", remote_ok_enabled=False)):
-      result = await searcher.search_all()
-  ```
+- **Framework**: Use `pytest` for all tests.
+- **Async Tests**: Use `pytest-asyncio`. Mark async tests with `@pytest.mark.asyncio`.
+- **Coverage**: Aim for at least 80% code coverage. Run with `uv run pytest --cov=src`.
+- **Mocks**:
+    - Use `aioresponses` for mocking `aiohttp` requests.
+    - Use `unittest.mock.patch` for mocking internal components or side effects (like sending emails/SMS).
+- **Fixtures**: Use `pytest` fixtures for common setup (e.g., a pre-configured `JobSearcher` or a temporary `ApplicationTracker`).
+- **Isolation**:
+    - Tests must not rely on local environment variables or files.
+    - Use temporary directories for tests that write to disk (`tmp_path` fixture).
+    - Mock all external API calls.
+- **Naming**: Test files must start with `test_` and be located in the `tests/` directory.
+
+```python
+# ✅ Correct: Async test with mocking
+import pytest
+from aioresponses import aioresponses
+from modules.job_search import JobSearcher
+
+@pytest.mark.asyncio
+async def test_search_remote_ok(job_searcher):
+    with aioresponses() as m:
+        m.get("https://remoteok.com/api?tag=python", payload=[{}, {"company": "Test", "position": "Dev", "url": "..."}])
+        jobs = await job_searcher._search_remote_ok()
+        assert len(jobs) == 1
+        assert jobs[0].company == "Test"
+```
 
 ---
 

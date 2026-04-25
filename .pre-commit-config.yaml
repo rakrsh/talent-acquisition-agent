@@ -56,7 +56,6 @@ repos:
         additional_dependencies:
           - pydantic>=2.0
           - pydantic-settings>=2.0
-          - types-aiohttp
         files: ^src/
 
   # ─── Security: detect hardcoded secrets ───────────────────────────────────
