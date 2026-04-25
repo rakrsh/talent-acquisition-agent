@@ -1,0 +1,31 @@
+{
+  "search_terms": [
+    {
+      "role": "python",
+      "keywords": ["python", "backend", "api"],
+      "locations": ["remote"],
+      "job_types": ["full-time"]
+    },
+    {
+      "role": "react",
+      "keywords": ["react", "frontend", "javascript"],
+      "locations": ["remote"],
+      "job_types": ["full-time"]
+    },
+    {
+      "role": "javascript",
+      "keywords": ["javascript", "typescript", "node"],
+      "locations": ["remote"],
+      "job_types": ["full-time"]
+    },
+    {
+      "role": "ai",
+      "keywords": ["machine learning", "ai", "data science"],
+      "locations": ["remote"],
+      "job_types": ["full-time"]
+    }
+  ],
+  "excluded_companies": [],
+  "experience_level": ["mid", "senior"],
+  "date_posted_days": 7
+}
