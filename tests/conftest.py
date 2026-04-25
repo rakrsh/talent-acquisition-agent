@@ -1,8 +1,9 @@
-import pytest
-from pathlib import Path
 import json
+
+import pytest
 from modules.job_search import Job
 from modules.tracker import JobApplication
+
 
 @pytest.fixture
 def sample_job():
@@ -12,8 +13,9 @@ def sample_job():
         location="Remote",
         url="https://example.com/job1",
         source="remote-ok",
-        posted_date="2023-01-01"
+        posted_date="2023-01-01",
     )
+
 
 @pytest.fixture
 def sample_application():
@@ -25,14 +27,16 @@ def sample_application():
         source="remote-ok",
         applied_date="2023-01-01T00:00:00",
         status="applied",
-        notes="Test notes"
+        notes="Test notes",
     )
+
 
 @pytest.fixture
 def tmp_data_dir(tmp_path):
     d = tmp_path / "data"
     d.mkdir()
     return d
+
 
 @pytest.fixture
 def tmp_config_file(tmp_path):
@@ -43,7 +47,7 @@ def tmp_config_file(tmp_path):
                 "role": "python",
                 "keywords": ["backend"],
                 "locations": ["remote"],
-                "job_types": ["full-time"]
+                "job_types": ["full-time"],
             }
         ]
     }

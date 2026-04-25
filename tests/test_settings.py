@@ -1,12 +1,14 @@
 import os
-import pytest
+
 from settings import Settings, get_settings
+
 
 def test_settings_default():
     settings = Settings()
     assert settings.env_mode == "development"
     assert settings.log_level == "INFO"
     assert settings.http_port == 8080
+
 
 def test_settings_env_override():
     os.environ["ENV_MODE"] = "production"
@@ -17,6 +19,7 @@ def test_settings_env_override():
     # Cleanup
     del os.environ["ENV_MODE"]
     del os.environ["HTTP_PORT"]
+
 
 def test_get_settings():
     settings = get_settings()

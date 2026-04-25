@@ -256,7 +256,7 @@ refactor(settings): consolidate DB settings
 When prompting Copilot or any LLM within this project context:
 
 ### Be Specific About the Layer
-> ✅ "Add a `_search_greenhouse(self) -> list[Job]` async method to `JobSearcher` in `job_search.py`"  
+> ✅ "Add a `_search_greenhouse(self) -> list[Job]` async method to `JobSearcher` in `job_search.py`"
 > ❌ "Add greenhouse job search"
 
 ### Reference the Settings Pattern
