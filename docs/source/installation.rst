@@ -8,7 +8,7 @@ Requirements
 - uv (package manager)
 
 Clone the Repository
--------------------
+--------------------
 
 .. code-block:: bash
 
@@ -16,7 +16,7 @@ Clone the Repository
    cd talent-acquisition-agent
 
 Install Dependencies
--------------------
+--------------------
 
 .. code-block:: bash
 
@@ -31,7 +31,7 @@ This will install all dependencies defined in ``pyproject.toml``:
 - ``twilio`` - SMS notifications
 
 Verify Installation
-------------------
+-------------------
 
 .. code-block:: bash
 

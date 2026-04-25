@@ -2,9 +2,6 @@ Settings Module
 ===============
 
 .. automodule:: settings
-   :members:
-   :undoc-members:
-   :show-inheritance:
 
 Settings Class
 --------------

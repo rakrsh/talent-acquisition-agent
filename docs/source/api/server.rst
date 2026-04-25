@@ -7,35 +7,35 @@ Server Module
    :show-inheritance:
 
 FastAPI Application
-------------------
+-------------------
 
 The server module provides a REST API for the Job Agent.
 
 Endpoints
 ^^^^^^^^^
 
-.. http:endpoint:: /
+.. http:get:: /
 
    Health check endpoint.
 
    :returns: Service status
    :rtype: dict
 
-.. http:endpoint:: /health
+.. http:get:: /health
 
    Detailed health check.
 
    :returns: Health status
    :rtype: dict
 
-.. http:endpoint:: /jobs
+.. http:get:: /jobs
 
    Search for jobs.
 
    :returns: List of jobs
    :rtype: dict
 
-.. http:endpoint:: /applications
+.. http:get:: /applications
 
    Get or add applications.
 

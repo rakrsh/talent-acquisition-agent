@@ -36,7 +36,7 @@ II. Dependencies
    ]
 
 III. Config
-----------
+-----------
 
 **Principle**: Store config in the environment.
 
@@ -60,7 +60,7 @@ IV. Backing Services
 - Local JSON file (application storage)
 
 V. Build, Release, Run
----------------------
+----------------------
 
 **Principle**: Strictly separate build and run stages.
 
