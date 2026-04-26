@@ -47,7 +47,9 @@ jobs:
       - name: Install dependencies
         run: uv sync --all-extras
       - name: Run pip-audit (Vulnerability Scan)
-        run: uv run pip-audit
+        run: |
+          uv export --format requirements-txt --output requirements.txt
+          uv run pip-audit -r requirements.txt
       - name: License check
         run: uv run pip-licenses --summary
 
