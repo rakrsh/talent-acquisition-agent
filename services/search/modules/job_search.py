@@ -81,7 +81,9 @@ async def _get_json(
     except asyncio.TimeoutError:
         logger.warning(f"Timeout: {_safe_endpoint_for_logging(url)}")
     except Exception as exc:
-        logger.error(f"Error fetching {_safe_endpoint_for_logging(url)}: {exc}")
+        logger.error(
+            f"Error fetching {_safe_endpoint_for_logging(url)} ({type(exc).__name__})"
+        )
     return None
 
 
@@ -94,7 +96,9 @@ async def _get_text(session: aiohttp.ClientSession, url: str, **kwargs) -> str |
     except asyncio.TimeoutError:
         logger.warning(f"Timeout: {_safe_endpoint_for_logging(url)}")
     except Exception as exc:
-        logger.error(f"Error fetching {_safe_endpoint_for_logging(url)}: {exc}")
+        logger.error(
+            f"Error fetching {_safe_endpoint_for_logging(url)} ({type(exc).__name__})"
+        )
     return None
 
 
