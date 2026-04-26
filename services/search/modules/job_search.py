@@ -60,6 +60,16 @@ def _redact_url_for_logging(url: str) -> str:
         return "<redacted-url>"
 
 
+def _safe_endpoint_for_logging(url: str) -> str:
+    try:
+        parts = urlsplit(url)
+        if parts.scheme and parts.netloc:
+            return f"{parts.scheme}://{parts.netloc}{parts.path}"
+        return parts.path or "<unknown-endpoint>"
+    except Exception:
+        return "<unknown-endpoint>"
+
+
 async def _get_json(
     session: aiohttp.ClientSession, url: str, **kwargs
 ) -> dict | list | None:
@@ -67,11 +77,11 @@ async def _get_json(
         async with session.get(url, timeout=_TIMEOUT, headers=_HEADERS, **kwargs) as r:
             if r.status == 200:
                 return await r.json(content_type=None)
-            logger.debug(f"GET {_redact_url_for_logging(url)} → {r.status}")
+            logger.debug(f"GET {_safe_endpoint_for_logging(url)} → {r.status}")
     except asyncio.TimeoutError:
-        logger.warning(f"Timeout: {_redact_url_for_logging(url)}")
+        logger.warning(f"Timeout: {_safe_endpoint_for_logging(url)}")
     except Exception as exc:
-        logger.error(f"Error fetching {_redact_url_for_logging(url)}: {exc}")
+        logger.error(f"Error fetching {_safe_endpoint_for_logging(url)}: {exc}")
     return None
 
 
@@ -80,11 +90,11 @@ async def _get_text(session: aiohttp.ClientSession, url: str, **kwargs) -> str |
         async with session.get(url, timeout=_TIMEOUT, headers=_HEADERS, **kwargs) as r:
             if r.status == 200:
                 return await r.text()
-            logger.debug(f"GET {_redact_url_for_logging(url)} → {r.status}")
+            logger.debug(f"GET {_safe_endpoint_for_logging(url)} → {r.status}")
     except asyncio.TimeoutError:
-        logger.warning(f"Timeout: {_redact_url_for_logging(url)}")
+        logger.warning(f"Timeout: {_safe_endpoint_for_logging(url)}")
     except Exception as exc:
-        logger.error(f"Error fetching {_redact_url_for_logging(url)}: {exc}")
+        logger.error(f"Error fetching {_safe_endpoint_for_logging(url)}: {exc}")
     return None
 
 
