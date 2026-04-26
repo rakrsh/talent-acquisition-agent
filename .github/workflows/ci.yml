@@ -1,13 +1,20 @@
-name: CI
+name: CI/CD Pipeline
 
 on:
   push:
     branches: [main]
   pull_request:
     branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  security-events: write
+  actions: read
 
 jobs:
-  lint:
+  lint-and-format:
+    name: Lint & Format
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -19,7 +26,37 @@ jobs:
       - name: Run pre-commit
         uses: pre-commit/action@v3.0.1
 
+  security-sast:
+    name: Security Scan (SAST)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Initialize CodeQL
+        uses: github/codeql-action/init@v3
+        with:
+          languages: python
+      - name: Perform CodeQL Analysis
+        uses: github/codeql-action/analyze@v3
+
+  dependency-check:
+    name: Security & License Check
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install uv
+        run: curl -LsSf https://astral.sh/uv/install.sh | sh
+      - name: Install dependencies
+        run: uv sync --all-extras --group dev
+      - name: Run pip-audit (Vulnerability Scan)
+        run: |
+          uv export --format requirements-txt --output-file requirements.txt
+          uv run pip-audit -r requirements.txt
+      - name: License check
+        run: uv run pip-licenses --summary
+
   test:
+    name: Build & Test
+    needs: [lint-and-format]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -30,12 +67,27 @@ jobs:
         with:
           python-version: '3.12'
       - name: Install dependencies
-        run: uv sync --all-extras
-      - name: Run tests
-        run: uv run pytest --cov=src --cov-report=xml
+        run: uv sync --all-extras --group dev
+      - name: Build package
+        run: uv build
+      - name: Run tests with coverage
+        run: |
+          uv run pytest --cov=src --cov-report=xml --cov-report=term-missing
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v4
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
           file: ./coverage.xml
           fail_ci_if_error: false
+
+  build-docs:
+    name: Verify Docs Build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install uv
+        run: curl -LsSf https://astral.sh/uv/install.sh | sh
+      - name: Install dependencies
+        run: uv sync --all-extras --group dev
+      - name: Build docs (Dry Run)
+        run: uv run sphinx-build -W -b html docs/source/ docs/build/html
