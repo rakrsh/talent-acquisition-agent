@@ -25,6 +25,7 @@ import json
 import xml.etree.ElementTree as ET
 from dataclasses import dataclass
 from pathlib import Path
+from urllib.parse import parse_qsl, urlencode, urlsplit, urlunsplit
 
 import aiohttp
 from config import logger
@@ -38,6 +39,25 @@ from modules.auth import get_auth_manager
 
 _HEADERS = {"User-Agent": "TalentAcquisitionAgent/2.0 (+https://github.com/rakrsh)"}
 _TIMEOUT = aiohttp.ClientTimeout(total=20)
+_SENSITIVE_QUERY_KEYS = {"api_key", "apikey", "key", "token", "access_token", "password"}
+
+
+def _redact_url_for_logging(url: str) -> str:
+    try:
+        parts = urlsplit(url)
+        if not parts.query:
+            return url
+        redacted_query = []
+        for k, v in parse_qsl(parts.query, keep_blank_values=True):
+            if k.lower() in _SENSITIVE_QUERY_KEYS:
+                redacted_query.append((k, "***REDACTED***"))
+            else:
+                redacted_query.append((k, v))
+        return urlunsplit(
+            (parts.scheme, parts.netloc, parts.path, urlencode(redacted_query), parts.fragment)
+        )
+    except Exception:
+        return "<redacted-url>"
 
 
 async def _get_json(
@@ -47,11 +67,11 @@ async def _get_json(
         async with session.get(url, timeout=_TIMEOUT, headers=_HEADERS, **kwargs) as r:
             if r.status == 200:
                 return await r.json(content_type=None)
-            logger.debug(f"GET {url} → {r.status}")
+            logger.debug(f"GET {_redact_url_for_logging(url)} → {r.status}")
     except asyncio.TimeoutError:
-        logger.warning(f"Timeout: {url}")
+        logger.warning(f"Timeout: {_redact_url_for_logging(url)}")
     except Exception as exc:
-        logger.error(f"Error fetching {url}: {exc}")
+        logger.error(f"Error fetching {_redact_url_for_logging(url)}: {exc}")
     return None
 
 
@@ -60,11 +80,11 @@ async def _get_text(session: aiohttp.ClientSession, url: str, **kwargs) -> str |
         async with session.get(url, timeout=_TIMEOUT, headers=_HEADERS, **kwargs) as r:
             if r.status == 200:
                 return await r.text()
-            logger.debug(f"GET {url} → {r.status}")
+            logger.debug(f"GET {_redact_url_for_logging(url)} → {r.status}")
     except asyncio.TimeoutError:
-        logger.warning(f"Timeout: {url}")
+        logger.warning(f"Timeout: {_redact_url_for_logging(url)}")
     except Exception as exc:
-        logger.error(f"Error fetching {url}: {exc}")
+        logger.error(f"Error fetching {_redact_url_for_logging(url)}: {exc}")
     return None
 
 
