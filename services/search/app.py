@@ -79,7 +79,7 @@ async def search_jobs():
 def run_server():
     settings = get_settings()
     # Use a different port for search service
-    port = int(getattr(settings, "search_service_port", 8081))
+    port = settings.search_service_port
     uvicorn.run("app:app", host="0.0.0.0", port=port, log_level="info")
 
 

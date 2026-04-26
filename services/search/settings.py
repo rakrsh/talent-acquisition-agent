@@ -29,6 +29,14 @@ class Settings(BaseSettings):
     )
     db_type: str = Field(default="sqlite", validation_alias="DB_TYPE")
 
+    # Microservices orchestration
+    search_service_url: str = Field(
+        default="http://search:8081/search", validation_alias="SEARCH_SERVICE_URL"
+    )
+    search_service_port: int = Field(
+        default=8081, validation_alias="SEARCH_SERVICE_PORT"
+    )
+
     # ===================================================================
     # Notification Services
     # ===================================================================

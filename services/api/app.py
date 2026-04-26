@@ -1,6 +1,5 @@
 """API Gateway / Orchestrator Service."""
 
-import os
 from contextlib import asynccontextmanager
 from typing import List, Optional
 
@@ -76,7 +75,8 @@ async def health():
 @app.get("/jobs")
 async def search_jobs():
     """Proxy request to Search Service."""
-    search_url = os.getenv("SEARCH_SERVICE_URL", "http://search:8081/search")
+    settings = get_settings()
+    search_url = settings.search_service_url
 
     async with aiohttp.ClientSession() as session:
         try:

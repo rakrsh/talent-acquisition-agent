@@ -9,9 +9,9 @@ def mock_config():
     return NotificationConfig(
         sender_email="sender@test.com",
         recipient_email="recipient@test.com",
-        sender_password="password",
-        twilio_sid="sid",
-        twilio_token="token",
+        sender_password="password",  # pragma: allowlist secret
+        twilio_sid="sid",  # pragma: allowlist secret
+        twilio_token="token",  # pragma: allowlist secret
         twilio_phone="+123",
         recipient_phone="+456",
     )

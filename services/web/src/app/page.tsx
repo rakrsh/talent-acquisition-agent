@@ -5,23 +5,23 @@ import Head from 'next/head';
 
 // --- Types ---
 interface Job {
-  title: str;
-  company: str;
-  location: str;
-  url: str;
-  source: str;
-  posted_date?: str;
+  title: string;
+  company: string;
+  location: string;
+  url: string;
+  source: string;
+  posted_date?: string;
 }
 
 interface Application {
-  title: str;
-  company: str;
-  location: str;
-  url: str;
-  source: str;
-  applied_date: str;
-  status: str;
-  notes?: str;
+  title: string;
+  company: string;
+  location: string;
+  url: string;
+  source: string;
+  applied_date: string;
+  status: string;
+  notes?: string;
 }
 
 // --- Components ---

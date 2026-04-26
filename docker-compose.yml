@@ -37,7 +37,7 @@ services:
       context: .
       dockerfile: services/web/Dockerfile
     ports:
-      - "3000:3000"
+      - "3002:3000"
     environment:
       - NEXT_PUBLIC_API_URL=http://localhost:8080
     depends_on:
@@ -59,7 +59,7 @@ services:
   grafana:
     image: grafana/grafana:latest
     ports:
-      - "3000:3001" # Shifted to avoid conflict with Next.js (3000)
+      - "3001:3000" # Shifted to avoid conflict with other services
 
 volumes:
   mongodb_data:
