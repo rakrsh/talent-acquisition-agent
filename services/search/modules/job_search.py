@@ -71,10 +71,12 @@ def _safe_endpoint_for_logging(url: str) -> str:
 
 
 async def _get_json(
-    session: aiohttp.ClientSession, url: str, **kwargs
+    session: aiohttp.ClientSession, url: str, params: dict | None = None, **kwargs
 ) -> dict | list | None:
     try:
-        async with session.get(url, timeout=_TIMEOUT, headers=_HEADERS, **kwargs) as r:
+        async with session.get(
+            url, params=params, timeout=_TIMEOUT, headers=_HEADERS, **kwargs
+        ) as r:
             if r.status == 200:
                 return await r.json(content_type=None)
             logger.debug(f"GET {_safe_endpoint_for_logging(url)} → {r.status}")
@@ -87,9 +89,13 @@ async def _get_json(
     return None
 
 
-async def _get_text(session: aiohttp.ClientSession, url: str, **kwargs) -> str | None:
+async def _get_text(
+    session: aiohttp.ClientSession, url: str, params: dict | None = None, **kwargs
+) -> str | None:
     try:
-        async with session.get(url, timeout=_TIMEOUT, headers=_HEADERS, **kwargs) as r:
+        async with session.get(
+            url, params=params, timeout=_TIMEOUT, headers=_HEADERS, **kwargs
+        ) as r:
             if r.status == 200:
                 return await r.text()
             logger.debug(f"GET {_safe_endpoint_for_logging(url)} → {r.status}")
@@ -393,9 +399,8 @@ class JobSearcher:
                 params: dict = {"category": role, "page": 1, "descending": "true"}
                 if settings.the_muse_api_key:
                     params["api_key"] = settings.the_muse_api_key
-                qs = "&".join(f"{k}={v}" for k, v in params.items())
                 data = await _get_json(
-                    s, f"https://www.themuse.com/api/public/jobs?{qs}"
+                    s, "https://www.themuse.com/api/public/jobs", params=params
                 )
                 if not isinstance(data, dict):
                     continue
