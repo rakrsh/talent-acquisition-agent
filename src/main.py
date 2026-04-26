@@ -1,6 +1,8 @@
 """Job Agent - 12-Factor App compliant talent acquisition agent."""
 
 import asyncio
+import json
+from dataclasses import asdict
 
 from config import logger
 from modules.job_search import JobSearcher
@@ -46,6 +48,12 @@ async def run_job_search():
         logger.info("Sending notifications...")
         notifier.notify_new_jobs(new_jobs)
 
+        # Save discovered jobs to file
+        jobs_file = tracker.data_path.parent / "discovered_jobs.json"
+        with open(jobs_file, "w") as f:
+            json.dump([asdict(job) for job in new_jobs], f, indent=2)
+        logger.info(f"Discovered jobs saved to: {jobs_file}")
+
         if settings.auto_apply_enabled:
             logger.info("Auto-apply enabled - would apply to jobs here")
         else:
@@ -53,10 +61,16 @@ async def run_job_search():
 
     # Final summary
     final_summary = tracker.get_summary()
-    logger.info(
-        f"Job search complete! Total tracked: {final_summary['total']} | "
-        f"Data saved to: {tracker.data_path}"
-    )
+    if final_summary["total"] > 0:
+        logger.info(
+            f"Job search complete! Total tracked: {final_summary['total']} | "
+            f"Data saved to: {tracker.data_path}"
+        )
+    else:
+        logger.info(
+            f"Job search complete! Found {len(jobs)} jobs | "
+            f"Discovered jobs saved to: {tracker.data_path.parent / 'discovered_jobs.json'}"
+        )
 
 
 async def main():

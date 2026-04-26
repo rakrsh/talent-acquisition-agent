@@ -49,8 +49,35 @@ class Settings(BaseSettings):
     # Job Search Configuration
     # ===================================================================
     remote_ok_enabled: bool = Field(default=True, validation_alias="REMOTE_OK_ENABLED")
+    remotive_enabled: bool = Field(default=True, validation_alias="REMOTIVE_ENABLED")
     linkedin_enabled: bool = Field(default=False, validation_alias="LINKEDIN_ENABLED")
     indeed_enabled: bool = Field(default=False, validation_alias="INDEED_ENABLED")
+
+    # Global Job Boards (Factor IV: Backing Services)
+    we_work_remotely_enabled: bool = Field(
+        default=False, validation_alias="WE_WORK_REMOTELY_ENABLED"
+    )
+    linkedin_job_enabled: bool = Field(
+        default=False, validation_alias="LINKEDIN_JOB_ENABLED"
+    )
+    indeed_job_enabled: bool = Field(
+        default=False, validation_alias="INDEED_JOB_ENABLED"
+    )
+    glassdoor_enabled: bool = Field(default=False, validation_alias="GLASSDOOR_ENABLED")
+    monster_enabled: bool = Field(default=False, validation_alias="MONSTER_ENABLED")
+    careerjet_enabled: bool = Field(default=False, validation_alias="CAREERJET_ENABLED")
+    jooble_enabled: bool = Field(default=False, validation_alias="JOOBLE_ENABLED")
+    simplyhired_enabled: bool = Field(
+        default=False, validation_alias="SIMPLYHIRED_ENABLED"
+    )
+    ziprecruiter_enabled: bool = Field(
+        default=False, validation_alias="ZIPRECRUITER_ENABLED"
+    )
+    lever_enabled: bool = Field(default=False, validation_alias="LEVER_ENABLED")
+    greenhouse_enabled: bool = Field(
+        default=False, validation_alias="GREENHOUSE_ENABLED"
+    )
+    ashby_enabled: bool = Field(default=False, validation_alias="ASHBY_ENABLED")
 
     max_jobs_per_search: int = Field(default=20, validation_alias="MAX_JOBS_PER_SEARCH")
     search_interval_hours: int = Field(

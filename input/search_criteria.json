@@ -3,25 +3,31 @@
     {
       "role": "python",
       "keywords": ["python", "backend", "api"],
-      "locations": ["remote"],
+      "locations": ["remote", "on-site", "hybrid"],
       "job_types": ["full-time"]
     },
     {
-      "role": "react",
-      "keywords": ["react", "frontend", "javascript"],
-      "locations": ["remote"],
+      "role": "devops",
+      "keywords": ["devops", "cloud", "automation"],
+      "locations": ["remote", "on-site", "hybrid"],
+      "job_types": ["full-time"]
+    },
+    {
+      "role": "site reliability engineer",
+      "keywords": ["site reliability engineer", "backend", "api"],
+      "locations": ["remote", "on-site", "hybrid"],
       "job_types": ["full-time"]
     },
     {
       "role": "javascript",
       "keywords": ["javascript", "typescript", "node"],
-      "locations": ["remote"],
+      "locations": ["remote", "on-site", "hybrid"],
       "job_types": ["full-time"]
     },
     {
       "role": "ai",
       "keywords": ["machine learning", "ai", "data science"],
-      "locations": ["remote"],
+      "locations": ["remote", "on-site", "hybrid"],
       "job_types": ["full-time"]
     }
   ],

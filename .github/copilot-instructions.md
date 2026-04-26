@@ -163,6 +163,7 @@ except:
     - Use temporary directories for tests that write to disk (`tmp_path` fixture).
     - Mock all external API calls.
 - **Naming**: Test files must start with `test_` and be located in the `tests/` directory.
+- Tests should be added for every new feature, bug fix, and edge case. No code is too small to test.
 
 ```python
 # ✅ Correct: Async test with mocking
@@ -211,6 +212,7 @@ async def search_all(self) -> list[Job]:
 - All new modules must have a corresponding `.rst` file under `docs/source/api/`.
 - Follow the existing pattern in `docs/source/api/main.rst`.
 - Build docs locally before committing: `cd docs && uv run sphinx-build -b html source/ build/html/dev`
+- Every new feature should contain documentation updates.
 
 ---
 
