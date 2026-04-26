@@ -3,6 +3,8 @@ import sys
 
 import tomllib
 
+sys.path.insert(0, os.path.abspath("../../services/api"))
+sys.path.insert(0, os.path.abspath("../../services/search"))
 sys.path.insert(0, os.path.abspath("../../src"))
 
 # Read version from pyproject.toml

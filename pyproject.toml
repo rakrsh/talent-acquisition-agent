@@ -1,6 +1,6 @@
 [project]
 name = "talent-acquisition-agent"
-version = "0.1.0"
+version = "0.1.dev0"
 description = "Open Source Agentic AI Job Search Engine"
 dependencies = [
     "langchain",
@@ -37,7 +37,7 @@ dev = [
 ]
 
 [tool.pytest.ini_options]
-pythonpath = ["src"]
+pythonpath = ["services/api", "services/search", "src"]
 asyncio_mode = "auto"
-testpaths = ["tests"]
-addopts = "--cov=src --cov-report=term-missing"
+testpaths = ["tests/services/api", "tests/services/search"]
+addopts = "--cov=services/api --cov=services/search --cov-report=term-missing"

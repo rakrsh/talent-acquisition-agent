@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Job Agent | Talent Acquisition Dashboard</title>
+    <link rel="stylesheet" href="/static/style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="logo">
+                <i class="fas fa-robot"></i>
+                <span>JobAgent</span>
+            </div>
+            <nav>
+                <a href="#" class="nav-item active" data-view="dashboard">
+                    <i class="fas fa-th-large"></i> Dashboard
+                </a>
+                <a href="#" class="nav-item" data-view="search">
+                    <i class="fas fa-search"></i> Job Search
+                </a>
+                <a href="#" class="nav-item" data-view="applications">
+                    <i class="fas fa-briefcase"></i> Applications
+                </a>
+            </nav>
+            <div class="sidebar-footer">
+                <div class="status-indicator">
+                    <span class="dot"></span> Backend: <span id="backend-status">Connecting...</span>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <header class="top-bar">
+                <h1 id="view-title">Dashboard</h1>
+                <div class="user-profile">
+                    <span id="current-date"></span>
+                </div>
+            </header>
+
+            <section id="dashboard-view" class="view active">
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-icon purple"><i class="fas fa-search"></i></div>
+                        <div class="stat-info">
+                            <h3>Total Jobs</h3>
+                            <p id="stat-total-jobs">0</p>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon blue"><i class="fas fa-paper-plane"></i></div>
+                        <div class="stat-info">
+                            <h3>Applications</h3>
+                            <p id="stat-total-apps">0</p>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon green"><i class="fas fa-check-circle"></i></div>
+                        <div class="stat-info">
+                            <h3>Interviews</h3>
+                            <p id="stat-interviews">0</p>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon orange"><i class="fas fa-clock"></i></div>
+                        <div class="stat-info">
+                            <h3>Pending</h3>
+                            <p id="stat-pending">0</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="dashboard-content">
+                    <div class="card recent-activity">
+                        <div class="card-header">
+                            <h2>Recent Applications</h2>
+                            <button class="btn-text" id="view-all-apps">View All</button>
+                        </div>
+                        <div class="table-container">
+                            <table id="recent-apps-table">
+                                <thead>
+                                    <tr>
+                                        <th>Company</th>
+                                        <th>Position</th>
+                                        <th>Date</th>
+                                        <th>Status</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <!-- Populated by JS -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section id="search-view" class="view">
+                <div class="search-controls">
+                    <button id="trigger-search" class="btn-primary">
+                        <i class="fas fa-sync-alt"></i> Run Pipeline Search
+                    </button>
+                    <div id="search-loading" class="loading-spinner hidden">
+                        <div class="spinner"></div>
+                        <span>Scanning job boards...</span>
+                    </div>
+                </div>
+                <div id="job-results" class="job-grid">
+                    <!-- Job cards populated by JS -->
+                </div>
+            </section>
+
+            <section id="applications-view" class="view">
+                <div class="kanban-board">
+                    <div class="kanban-column" data-status="applied">
+                        <div class="column-header">Applied <span class="count">0</span></div>
+                        <div class="kanban-items" id="column-applied"></div>
+                    </div>
+                    <div class="kanban-column" data-status="interviewing">
+                        <div class="column-header">Interviewing <span class="count">0</span></div>
+                        <div class="kanban-items" id="column-interviewing"></div>
+                    </div>
+                    <div class="kanban-column" data-status="offered">
+                        <div class="column-header">Offered <span class="count">0</span></div>
+                        <div class="kanban-items" id="column-offered"></div>
+                    </div>
+                    <div class="kanban-column" data-status="rejected">
+                        <div class="column-header">Rejected <span class="count">0</span></div>
+                        <div class="kanban-items" id="column-rejected"></div>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- Notification Container -->
+    <div id="notification-container"></div>
+
+    <script src="/static/app.js"></script>
+</body>
+</html>
