@@ -1,15 +1,14 @@
-"""HTTP Server - 12-Factor App Factor VII: Port Binding."""
+"""API Gateway / Orchestrator Service."""
 
 import os
 from contextlib import asynccontextmanager
 from typing import List, Optional
 
+import aiohttp
 import uvicorn
 from config import logger
 from fastapi import FastAPI, HTTPException
-from fastapi.responses import HTMLResponse
-from fastapi.staticfiles import StaticFiles
-from modules.job_search import JobSearcher
+from fastapi.middleware.cors import CORSMiddleware
 from modules.tracker import ApplicationTracker
 from pydantic import BaseModel
 from settings import get_settings
@@ -20,25 +19,26 @@ from settings import get_settings
 # =============================================================================
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    """Factor IX: Disposability - clean startup/shutdown."""
-    logger.info("Job Agent starting up")
+    logger.info("API Service starting up")
     yield
-    logger.info("Job Agent shutting down")
+    logger.info("API Service shutting down")
 
 
 app = FastAPI(
     title="Job Agent API",
-    description="Talent Acquisition Agent - 12-Factor App compliant",
+    description="Orchestrator for Talent Acquisition Agent",
     version="1.1.0",
     lifespan=lifespan,
 )
 
-# Mount static files
-static_dir = os.path.join(os.path.dirname(__file__), "static")
-if not os.path.exists(static_dir):
-    os.makedirs(static_dir)
-
-app.mount("/static", StaticFiles(directory=static_dir), name="static")
+# Enable CORS for the Next.js frontend
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],  # Adjust in production
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 
 # =============================================================================
@@ -68,56 +68,31 @@ class ApplicationRequest(BaseModel):
 # =============================================================================
 # Routes
 # =============================================================================
-@app.get("/", response_class=HTMLResponse)
-async def root():
-    """Serve the Web UI - Factor VII: Port Binding."""
-    index_path = os.path.join(static_dir, "index.html")
-    if os.path.exists(index_path):
-        with open(index_path, encoding="utf-8") as f:
-            return f.read()
-    return """
-    <html>
-        <head><title>Job Agent</title></head>
-        <body style="font-family: sans-serif; background: #0f172a; color: white; display: flex; align-items: center; justify-content: center; height: 100vh;">
-            <div style="text-align: center;">
-                <h1>Job Agent UI</h1>
-                <p>Initializing UI components...</p>
-                <progress></progress>
-            </div>
-            <script>setTimeout(() => window.location.reload(), 2000);</script>
-        </body>
-    </html>
-    """
-
-
 @app.get("/health")
 async def health():
-    """Health check endpoint."""
-    return {"status": "healthy"}
+    return {"status": "healthy", "service": "api-service"}
 
 
 @app.get("/jobs")
 async def search_jobs():
-    """Search for jobs - triggers job search pipeline."""
-    settings = get_settings()
-    searcher = JobSearcher()
+    """Proxy request to Search Service."""
+    search_url = os.getenv("SEARCH_SERVICE_URL", "http://search:8081/search")
 
-    jobs = await searcher.search_all()
-
-    return {
-        "count": len(jobs),
-        "jobs": [
-            JobResponse(
-                title=j.title,
-                company=j.company,
-                location=j.location,
-                url=j.url,
-                source=j.source,
-                posted_date=j.posted_date,
-            )
-            for j in jobs[: settings.max_jobs_per_search]
-        ],
-    }
+    async with aiohttp.ClientSession() as session:
+        try:
+            async with session.get(search_url) as resp:
+                if resp.status == 200:
+                    return await resp.json()
+                else:
+                    logger.error(f"Search service returned {resp.status}")
+                    raise HTTPException(
+                        status_code=resp.status, detail="Search service error"
+                    )
+        except Exception as e:
+            logger.error(f"Could not connect to search service: {e}")
+            raise HTTPException(
+                status_code=503, detail="Search service unavailable"
+            ) from e
 
 
 @app.get("/applications")
@@ -130,7 +105,7 @@ async def get_applications():
 
 
 @app.post("/applications")
-async def add_application(app: ApplicationRequest):
+async def add_application(app_req: ApplicationRequest):
     """Record a new job application."""
     tracker = ApplicationTracker()
 
@@ -144,23 +119,22 @@ async def add_application(app: ApplicationRequest):
             self.source = source
 
     job = TempJob(
-        title=app.title,
-        company=app.company,
-        location=app.location,
-        url=app.url,
-        source=app.source,
+        title=app_req.title,
+        company=app_req.company,
+        location=app_req.location,
+        url=app_req.url,
+        source=app_req.source,
     )
 
     success = tracker.add_application(job)
 
     if success:
-        return {"status": "recorded", "url": app.url}
+        return {"status": "recorded", "url": app_req.url}
     raise HTTPException(status_code=409, detail="Already applied")
 
 
 @app.get("/applications/{url}/status")
 async def get_application_status(url: str):
-    """Get status of a specific application."""
     tracker = ApplicationTracker()
     apps = tracker.get_applications()
 
@@ -178,7 +152,6 @@ async def get_application_status(url: str):
 
 @app.patch("/applications/{url}/status")
 async def update_application_status(url: str, status: str, notes: str = ""):
-    """Update application status."""
     tracker = ApplicationTracker()
     success = tracker.update_status(url, status, notes)
 
@@ -187,20 +160,9 @@ async def update_application_status(url: str, status: str, notes: str = ""):
     raise HTTPException(status_code=404, detail="Application not found")
 
 
-# =============================================================================
-# Factor VII: Port Binding - Run as HTTP service
-# =============================================================================
 def run_server():
-    """Run the HTTP server."""
     settings = get_settings()
-    logger.info(f"Starting HTTP server on {settings.http_host}:{settings.http_port}")
-
-    uvicorn.run(
-        "server:app",
-        host=settings.http_host,
-        port=settings.http_port,
-        log_level=settings.log_level.lower(),
-    )
+    uvicorn.run("app:app", host="0.0.0.0", port=settings.http_port, log_level="info")
 
 
 if __name__ == "__main__":
