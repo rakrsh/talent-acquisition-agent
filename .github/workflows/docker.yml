@@ -196,72 +196,6 @@ jobs:
           build-args: |
             VERSION=${{ needs.version.outputs.version }}
 
-  # Create GitHub release on tag push
-  release:
-    needs: [version, build-api, build-search, build-web, helm-chart]
-    runs-on: ubuntu-latest
-    if: needs.version.outputs.is_tag == 'true'
-    permissions:
-      contents: write
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-
-      - name: Download API image
-        uses: actions/download-artifact@v4
-        with:
-          name: api-image
-          path: api-image
-
-      - name: Download Search image
-        uses: actions/download-artifact@v4
-        with:
-          name: search-image
-          path: search-image
-
-      - name: Download Web image
-        uses: actions/download-artifact@v4
-        with:
-          name: web-image
-          path: web-image
-
-      - name: Generate changelog
-        id: changelog
-        run: |
-          CHANGELOG=$(git log --pretty=format:"- %s (%h)" --since="$(git describe --tags --abbrev=0 ^HEAD)"..HEAD 2>/dev/null || echo "- Initial release")
-          echo "changelog=$CHANGELOG" >> $GITHUB_OUTPUT
-
-      - name: Create GitHub Release
-        uses: actions/create-release@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          tag_name: ${{ github.ref_name }}
-          release_name: Release v${{ needs.version.outputs.version }}
-          body: |
-            ## What's Changed
-
-            ${{ steps.changelog.outputs.changelog }}
-
-            ## Docker Images
-
-            | Service | Image |
-            |---------|-------|
-            | API | `ghcr.io/${{ env.IMAGE_NAME }}/api:v${{ needs.version.outputs.version }}` |
-            | Search | `ghcr.io/${{ env.IMAGE_NAME }}/search:v${{ needs.version.outputs.version }}` |
-            | Web | `ghcr.io/${{ env.IMAGE_NAME }}/web:v${{ needs.version.outputs.version }}` |
-
-            ## Installation
-
-            ```bash
-            docker pull ghcr.io/${{ env.IMAGE_NAME }}/api:v${{ needs.version.outputs.version }}
-            docker pull ghcr.io/${{ env.IMAGE_NAME }}/search:v${{ needs.version.outputs.version }}
-            docker pull ghcr.io/${{ env.IMAGE_NAME }}/web:v${{ needs.version.outputs.version }}
-            ```
-          draft: false
-          prerelease: ${{ contains(needs.version.outputs.version, 'alpha') || contains(needs.version.outputs.version, 'beta') }}
 
   # Package and publish Helm chart
   helm-chart:
@@ -326,19 +260,3 @@ jobs:
           publish_branch: gh-pages
           keep_files: true
         if: github.ref == 'refs/heads/main'
-
-      - name: Create GitHub Release for Helm chart
-        if: github.ref_type == 'tag'
-        uses: softprops/action-gh-release@v2
-        with:
-          files: |
-            *.tgz
-          body: |
-            ## Helm Chart
-
-            Install the chart:
-
-            ```bash
-            helm repo add job-agent https://${{ github.actor }}.github.io/${{ github.repository }}/helm
-            helm install job-agent job-agent/job-agent --version ${{ needs.version.outputs.version }}
-            ```
