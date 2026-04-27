@@ -204,6 +204,7 @@ jobs:
     if: github.event_name != 'pull_request'
     permissions:
       contents: write
+      packages: write
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -227,7 +228,7 @@ jobs:
         run: |
           # Update the chart version from pyproject.toml
           PYPROJECT_VERSION=$(grep -m1 '^version = ' pyproject.toml | sed 's/.*"\(.*\)"/\1/')
-          CHART_VERSION=${PYPROJECT_VERSION%.dev*}
+          export CHART_VERSION=${PYPROJECT_VERSION%.dev*}
 
           # Update Chart.yaml
           yq -i '.version = env(CHART_VERSION)' helm/job-agent/Chart.yaml
@@ -260,3 +261,10 @@ jobs:
           publish_branch: gh-pages
           keep_files: true
         if: github.ref == 'refs/heads/main'
+
+      - name: Log in to Helm Registry
+        run: echo "${{ secrets.GITHUB_TOKEN }}" | helm registry login ${{ env.REGISTRY }} -u ${{ github.actor }} --password-stdin
+
+      - name: Push Helm chart to GHCR (OCI)
+        run: |
+          helm push job-agent-${{ needs.version.outputs.version }}.tgz oci://${{ env.REGISTRY }}/${{ github.repository_owner }}
