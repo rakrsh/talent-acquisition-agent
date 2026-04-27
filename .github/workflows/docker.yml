@@ -204,6 +204,7 @@ jobs:
     if: github.event_name != 'pull_request'
     permissions:
       contents: write
+      packages: write
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
