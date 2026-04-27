@@ -260,3 +260,10 @@ jobs:
           publish_branch: gh-pages
           keep_files: true
         if: github.ref == 'refs/heads/main'
+
+      - name: Log in to Helm Registry
+        run: echo "${{ secrets.GITHUB_TOKEN }}" | helm registry login ${{ env.REGISTRY }} -u ${{ github.actor }} --password-stdin
+
+      - name: Push Helm chart to GHCR (OCI)
+        run: |
+          helm push job-agent-${{ needs.version.outputs.version }}.tgz oci://${{ env.REGISTRY }}/${{ github.repository_owner }}
