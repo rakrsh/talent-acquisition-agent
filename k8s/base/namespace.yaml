@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: job-agent
+  labels:
+    app.kubernetes.io/name: job-agent
+    app.kubernetes.io/managed-by: Helm

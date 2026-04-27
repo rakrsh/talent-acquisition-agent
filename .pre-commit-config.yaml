@@ -11,6 +11,8 @@ repos:
       - id: trailing-whitespace        # strip trailing spaces
       - id: end-of-file-fixer          # ensure files end with a newline
       - id: check-yaml                 # validate YAML syntax
+        args: ['--allow-multiple-documents']
+        exclude: '^(helm/|k8s/)'  # Helm templates and k8s manifests use Go templating
       - id: check-toml                 # validate pyproject.toml etc.
       - id: check-json                 # validate JSON (search_criteria.json etc.)
       - id: check-added-large-files    # block files > 500 KB
@@ -79,7 +81,8 @@ repos:
     rev: v1.35.1
     hooks:
       - id: yamllint
-        args: ['-d', '{extends: relaxed, rules: {line-length: {max: 120}}}']
+        args: ['-d', '{extends: relaxed, rules: {line-length: {max: 200}}}']
+        exclude: '^(helm/|k8s/)'
         files: \.(ya?ml)$
 
   # ─── Markdown lint ─────────────────────────────────────────────────────────

@@ -25,11 +25,11 @@ import json
 import xml.etree.ElementTree as ET
 from dataclasses import dataclass
 from pathlib import Path
+from urllib.parse import urlsplit, urlunsplit
 
 import aiohttp
 from config import logger
 from settings import get_settings
-from urllib.parse import urlsplit, urlunsplit
 
 from modules.auth import get_auth_manager
 

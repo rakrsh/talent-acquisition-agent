@@ -1,0 +1,14 @@
+apiVersion: v2
+name: job-agent
+description: A Helm chart for Talent Acquisition Agent (Job Agent)
+type: application
+version: 0.1.0
+appVersion: "1.0"
+keywords:
+  - job
+  - recruitment
+  - talent
+  - agent
+maintainers:
+  - name: Job Agent Team
+    email: team@jobagent.dev

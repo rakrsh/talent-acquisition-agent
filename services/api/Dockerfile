@@ -1,6 +1,13 @@
+# Build argument for version
+ARG VERSION=dev
+
 FROM python:3.12-slim
 
 WORKDIR /app
+
+# Set version label
+LABEL org.opencontainers.image.version="${VERSION}"
+LABEL org.opencontainers.image.title="Talent Acquisition Agent - API Service"
 
 # Install dependencies using uv
 COPY pyproject.toml .
@@ -13,6 +20,7 @@ COPY services/api/ .
 
 ENV PYTHONPATH=/app
 ENV HTTP_PORT=8080
+ENV VERSION=${VERSION}
 
 EXPOSE 8080
 
