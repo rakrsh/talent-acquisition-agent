@@ -127,3 +127,22 @@ Export to CSV:
    tracker = ApplicationTracker()
    csv_path = tracker.export_csv()
    print(f"Exported to: {csv_path}")
+
+Kubernetes Deployment
+---------------------
+
+The project supports deployment to Kubernetes via Helm and Kustomize.
+
+**Using Helm:**
+
+.. code-block:: bash
+
+   helm install job-agent ./helm/job-agent --namespace job-agent --create-namespace
+
+**Using Kustomize:**
+
+.. code-block:: bash
+
+   kubectl apply -k k8s/overlays/prod
+
+For more details, see the documentation in the ``k8s/`` directory.
