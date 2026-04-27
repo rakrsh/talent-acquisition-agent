@@ -1,0 +1,20 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: job-agent-config
+  namespace: job-agent
+data:
+  DATABASE_URL: "sqlite:///./data/job_agent.db"
+  SEARCH_SERVICE_URL: "http://search-service:8081/search"
+  NEXT_PUBLIC_API_URL: "http://api-service:8080"
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: job-agent-secrets
+  namespace: job-agent
+type: Opaque
+stringData:
+  # Add your secrets here - use external-secrets or vault for production
+  # DATABASE_PASSWORD: ""
+  # API_KEYS: ""

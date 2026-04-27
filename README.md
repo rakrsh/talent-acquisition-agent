@@ -6,6 +6,8 @@
 [![Next.js 14](https://img.shields.io/badge/Next.js-14-black.svg)](https://nextjs.org/)
 [![Docker](https://img.shields.io/badge/Docker-Ready-blue.svg)](https://www.docker.com/)
 [![12-Factor App](https://img.shields.io/badge/12-Factor%20App-Compliant-green.svg)](https://12factor.net/)
+[![Kubernetes](https://img.shields.io/badge/Kubernetes-Ready-blue.svg)](https://kubernetes.io/)
+[![Helm](https://img.shields.io/badge/Helm-Support-blue.svg)](https://helm.sh/)
 
 Job Agent is a microservices-based automated job search and application tracking system. It searches multiple job boards, notifies you of new opportunities, and tracks all your applications.
 
@@ -25,6 +27,7 @@ The system is split into three core microservices:
 - 🌐 **Modern Web UI** - Real-time dashboard with search and stats.
 - 🐳 **Dockerized** - Easy deployment with Docker Compose.
 - 📋 **12-Factor App** - Production-ready, cloud-native architecture.
+- ☸️ **Kubernetes & Helm** - Native support for K8s deployments and Helm charts.
 
 ## 🛠️ Quick Start
 
@@ -63,6 +66,8 @@ talent-acquisition-agent/
 ├── docker-compose.yml # Service orchestration
 ├── input/            # Search criteria configuration
 ├── data/             # Persistent application data
+├── k8s/              # Kubernetes manifests (Base + Overlays)
+├── helm/             # Helm charts for automated deployment
 └── docs/             # Sphinx documentation
 ```
 
@@ -74,23 +79,54 @@ talent-acquisition-agent/
 | API | `/applications` | List/Add applications |
 | Search | `/search` | Low-level scraping endpoint |
 
-## 🧪 Development & Testing
+## 🚀 Deployment Options
 
-You can still run services locally for development:
-
+### Docker Compose (Local Dev)
+The easiest way to run the entire stack locally:
 ```bash
-# Start API Service
-cd services/api
-uv run python app.py
+docker-compose up --build
+```
 
-# Start Search Service
-cd services/search
-uv run python app.py
+### Kubernetes & Helm (Production)
+For production-grade deployments:
+```bash
+# Using Helm
+helm install job-agent ./helm/job-agent --namespace job-agent --create-namespace
 
-# Start Web UI
-cd services/web
-npm install
-npm run dev
+# Using Kustomize
+kubectl apply -k k8s/overlays/prod
+```
+See [k8s/README.md](k8s/README.md) for detailed instructions.
+
+## 🛠️ Development
+
+### Setup environment
+```bash
+cp .env.example .env
+# Install dependencies with uv
+uv sync
+```
+
+### Pre-commit Checks
+We use `pre-commit` to ensure code quality. It runs Ruff, MyPy, and secret detection.
+```bash
+# Install hooks
+uv run pre-commit install
+
+# Run manually
+uv run pre-commit run --all-files
+```
+
+### Running Services Locally
+```bash
+# API Service
+cd services/api && uv run python app.py
+
+# Search Service
+cd services/search && uv run python app.py
+
+# Web UI
+cd services/web && npm install && npm run dev
 ```
 
 ## 📜 License

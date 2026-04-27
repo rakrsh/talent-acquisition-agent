@@ -1,6 +1,13 @@
+# Build argument for version
+ARG VERSION=dev
+
 FROM python:3.12-slim
 
 WORKDIR /app
+
+# Set version label
+LABEL org.opencontainers.image.version="${VERSION}"
+LABEL org.opencontainers.image.title="Talent Acquisition Agent - Search Service"
 
 # Install uv for dependency management
 RUN pip install uv
@@ -14,6 +21,7 @@ COPY services/search/ .
 
 ENV PYTHONPATH=/app
 ENV SEARCH_SERVICE_PORT=8081
+ENV VERSION=${VERSION}
 
 EXPOSE 8081
 

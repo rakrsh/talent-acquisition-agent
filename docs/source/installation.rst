@@ -43,3 +43,28 @@ You should see output like:
 ::
 
    2026-04-25 17:15:12 | INFO | job_agent | Job Agent v1.1.0 starting
+
+Development Setup
+-----------------
+
+To contribute to this project, please set up the development environment:
+
+1. Install development dependencies:
+
+   .. code-block:: bash
+
+      uv sync
+
+2. Install pre-commit hooks:
+
+   .. code-block:: bash
+
+      uv run pre-commit install
+
+3. Run checks manually:
+
+   .. code-block:: bash
+
+      uv run pre-commit run --all-files
+
+The pre-commit configuration ensures code quality remains intact.

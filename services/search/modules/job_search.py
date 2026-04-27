@@ -39,7 +39,14 @@ from modules.auth import get_auth_manager
 
 _HEADERS = {"User-Agent": "TalentAcquisitionAgent/2.0 (+https://github.com/rakrsh)"}
 _TIMEOUT = aiohttp.ClientTimeout(total=20)
-_SENSITIVE_QUERY_KEYS = {"api_key", "apikey", "key", "token", "access_token", "password"}
+_SENSITIVE_QUERY_KEYS = {
+    "api_key",
+    "apikey",
+    "key",
+    "token",
+    "access_token",
+    "password",
+}
 
 
 def _redact_url_for_logging(url: str) -> str:
@@ -54,7 +61,13 @@ def _redact_url_for_logging(url: str) -> str:
             else:
                 redacted_query.append((k, v))
         return urlunsplit(
-            (parts.scheme, parts.netloc, parts.path, urlencode(redacted_query), parts.fragment)
+            (
+                parts.scheme,
+                parts.netloc,
+                parts.path,
+                urlencode(redacted_query),
+                parts.fragment,
+            )
         )
     except Exception:
         return "<redacted-url>"
