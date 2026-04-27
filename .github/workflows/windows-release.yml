@@ -1,0 +1,70 @@
+name: Build Windows Installer (.exe)
+
+on:
+  workflow_dispatch:
+  release:
+    types: [published]
+
+jobs:
+  build-windows:
+    runs-on: windows-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+          cache-dependency-path: services/web/package.json
+
+      - name: Install uv
+        shell: bash
+        run: curl -LsSf https://astral.sh/uv/install.sh | sh
+
+      - name: Install Python dependencies
+        run: uv sync --all-extras --group dev
+
+      - name: Build Next.js UI (Static Export)
+        shell: bash
+        run: |
+          cd services/web
+          npm install
+          npm run build
+          # The output will be in services/web/out
+          mkdir -p ../../dist/web_dist
+          cp -r out/* ../../dist/web_dist/
+
+      - name: Build API Service (.exe)
+        run: |
+          $env:PYTHONPATH="src;services/api"
+          uv run python -m nuitka --standalone --onefile --include-package-data=fastapi --include-package-data=uvicorn --output-dir=dist/api services/api/app.py --output-filename=api-service.exe
+
+      - name: Build Search Service (.exe)
+        run: |
+          $env:PYTHONPATH="src;services/search"
+          uv run python -m nuitka --standalone --onefile --output-dir=dist/search services/search/app.py --output-filename=search-service.exe
+
+      - name: Download NSSM
+        run: |
+          mkdir windows/nssm
+          Invoke-WebRequest -Uri "https://nssm.cc/release/nssm-2.24.zip" -OutFile "nssm.zip"
+          Expand-Archive -Path "nssm.zip" -DestinationPath "windows/nssm"
+          Copy-Item -Path "windows/nssm/nssm-2.24/win64/nssm.exe" -Destination "windows/nssm.exe"
+
+      - name: Build Inno Setup Installer
+        uses: Minionguyjpro/Inno-Setup-Action@v1.2.2
+        with:
+          path: windows/setup.iss
+
+      - name: Upload Installer Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: JobAgentInstaller
+          path: Output/JobAgentInstaller.exe

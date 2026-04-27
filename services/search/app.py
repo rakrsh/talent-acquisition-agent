@@ -24,7 +24,7 @@ async def lifespan(app: FastAPI):
 app = FastAPI(
     title="Job Search Service",
     description="Dedicated service for scraping job boards",
-    version="1.0.0",
+    version="0.1.dev0",
     lifespan=lifespan,
 )
 

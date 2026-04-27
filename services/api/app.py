@@ -1,5 +1,6 @@
 """API Gateway / Orchestrator Service."""
 
+import os
 from contextlib import asynccontextmanager
 from typing import List, Optional
 
@@ -8,6 +9,7 @@ import uvicorn
 from config import logger
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.staticfiles import StaticFiles
 from modules.tracker import ApplicationTracker
 from pydantic import BaseModel
 from settings import get_settings
@@ -26,7 +28,7 @@ async def lifespan(app: FastAPI):
 app = FastAPI(
     title="Job Agent API",
     description="Orchestrator for Talent Acquisition Agent",
-    version="1.1.0",
+    version="0.1.dev0",
     lifespan=lifespan,
 )
 
@@ -172,7 +174,13 @@ async def update_application_status(url: str, status: str, notes: str = ""):
 
 def run_server():
     settings = get_settings()
-    uvicorn.run("app:app", host="0.0.0.0", port=settings.http_port, log_level="info")
+
+    # Mount static frontend if available (used in standalone Windows deployment)
+    web_dist_path = os.path.join(os.getcwd(), "web_dist")
+    if os.path.exists(web_dist_path):
+        app.mount("/ui", StaticFiles(directory=web_dist_path, html=True), name="web")
+
+    uvicorn.run(app, host="0.0.0.0", port=settings.http_port, log_level="info")
 
 
 if __name__ == "__main__":

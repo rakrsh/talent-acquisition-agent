@@ -68,10 +68,11 @@ It complements `copilot-instructions.md` by focusing on system-level agents rath
 
 ### 8. Deployment Agent (DevOps)
 - **Responsibility**: Standardize deployment across environments.
-- **Tools**: Docker Compose, Kubernetes manifests, Helm charts.
-- **Artifacts**: `helm/job-agent`, `k8s/base`, `k8s/overlays`.
+- **Tools**: Docker Compose, Kubernetes manifests, Helm charts, Inno Setup, Nuitka.
+- **Artifacts**: `helm/job-agent`, `k8s/base`, `k8s/overlays`, `windows/setup.iss`, `JobAgentInstaller.exe`.
 - **12-Factor Alignment**:
   - Factor X - Keep development, staging, and production as similar as possible.
+  - Windows Support - Compiles backend services to standalone `.exe` and packages them into a native installer.
 
 ---
 
