@@ -1,0 +1,88 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: api-deployment
+  namespace: job-agent
+  labels:
+    app: api
+    app.kubernetes.io/name: job-agent
+    app.kubernetes.io/component: api
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: api
+  template:
+    metadata:
+      labels:
+        app: api
+        app.kubernetes.io/name: job-agent
+        app.kubernetes.io/component: api
+    spec:
+      containers:
+      - name: api
+        image: job-agent-api:latest
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 8080
+          name: http
+        env:
+        - name: HTTP_PORT
+          value: "8080"
+        - name: DATABASE_URL
+          valueFrom:
+            configMapKeyRef:
+              name: job-agent-config
+              key: DATABASE_URL
+        - name: SEARCH_SERVICE_URL
+          valueFrom:
+            configMapKeyRef:
+              name: job-agent-config
+              key: SEARCH_SERVICE_URL
+        volumeMounts:
+        - name: data
+          mountPath: /app/data
+        - name: input
+          mountPath: /app/input
+        resources:
+          requests:
+            memory: "256Mi"
+            cpu: "250m"
+          limits:
+            memory: "512Mi"
+            cpu: "500m"
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: 8080
+          initialDelaySeconds: 30
+          periodSeconds: 10
+        readinessProbe:
+          httpGet:
+            path: /ready
+            port: 8080
+          initialDelaySeconds: 5
+          periodSeconds: 5
+      volumes:
+      - name: data
+        emptyDir: {}
+      - name: input
+        emptyDir: {}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: api-service
+  namespace: job-agent
+  labels:
+    app.kubernetes.io/name: job-agent
+    app.kubernetes.io/component: api
+spec:
+  type: ClusterIP
+  ports:
+  - port: 8080
+    targetPort: 8080
+    protocol: TCP
+    name: http
+  selector:
+    app: api

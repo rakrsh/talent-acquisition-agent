@@ -1,0 +1,79 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "job-agent.fullname" . }}-search
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "job-agent.labels" . | nindent 4 }}
+    app.kubernetes.io/component: search
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      {{- include "job-agent.labels" . | nindent 6 }}
+      app.kubernetes.io/component: search
+  template:
+    metadata:
+      annotations:
+        checksum/config: {{ include (print $.Chart.Name "-config") . | sha256sum }}
+      labels:
+        {{- include "job-agent.labels" . | nindent 8 }}
+        app.kubernetes.io/component: search
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ include "job-agent.fullname" . }}-serviceaccount
+      securityContext:
+        {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      containers:
+      - name: search
+        image: "{{ .Values.image.repository }}/search:{{ .Values.image.tag | default .Chart.AppVersion }}"
+        imagePullPolicy: {{ .Values.image.pullPolicy }}
+        ports:
+        - name: http
+          containerPort: {{ .Values.service.search.port }}
+          protocol: TCP
+        env:
+        - name: SEARCH_SERVICE_PORT
+          value: {{ .Values.service.search.port | quote }}
+        volumeMounts:
+        - name: input
+          mountPath: /app/input
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: http
+          initialDelaySeconds: 30
+          periodSeconds: 10
+        readinessProbe:
+          httpGet:
+            path: /ready
+            port: http
+          initialDelaySeconds: 5
+          periodSeconds: 5
+        resources:
+          {{- toYaml .Values.resources.search | nindent 10 }}
+      volumes:
+      - name: input
+        emptyDir: {}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "job-agent.fullname" . }}-search
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "job-agent.labels" . | nindent 4 }}
+    app.kubernetes.io/component: search
+spec:
+  type: {{ .Values.service.type }}
+  ports:
+  - port: {{ .Values.service.search.port }}
+    targetPort: http
+    protocol: TCP
+    name: http
+  selector:
+    {{- include "job-agent.labels" . | nindent 6 }}
+    app.kubernetes.io/component: search

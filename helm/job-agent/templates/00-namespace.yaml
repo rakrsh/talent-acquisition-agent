@@ -1,0 +1,10 @@
+{{- .Values.nameOverride | default .Chart.Name | trunc 63 | trimSuffix "-" -}}
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: {{ .Release.Namespace }}
+  labels:
+    app.kubernetes.io/name: {{ include "job-agent.fullname" . }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+    app.kubernetes.io/version: {{ .Chart.AppVersion | quote }}
+    app.kubernetes.io/partOf: {{ .Chart.Name | quote }}

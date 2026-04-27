@@ -1,0 +1,105 @@
+# Pre-commit configuration for talent-acquisition-agent
+# Install: uv add --dev pre-commit && uv run pre-commit install
+# Run manually: uv run pre-commit run --all-files
+
+repos:
+
+  # ─── General file hygiene ──────────────────────────────────────────────────
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v4.6.0
+    hooks:
+      - id: trailing-whitespace        # strip trailing spaces
+      - id: end-of-file-fixer          # ensure files end with a newline
+      - id: check-yaml                 # validate YAML syntax
+        args: ['--allow-multiple-documents']
+        exclude: '^(helm/|k8s/)'  # Helm templates and k8s manifests use Go templating
+      - id: check-toml                 # validate pyproject.toml etc.
+      - id: check-json                 # validate JSON (search_criteria.json etc.)
+      - id: check-added-large-files    # block files > 500 KB
+        args: ['--maxkb=500']
+      - id: check-merge-conflict       # catch leftover merge markers
+      - id: check-case-conflict        # catch case-insensitive filename collisions
+      - id: debug-statements           # catch pdb / breakpoint() left in code
+      - id: detect-private-key         # block accidental secret commits
+      - id: mixed-line-ending
+        args: ['--fix=lf']
+
+  # ─── Python: Ruff (lint + auto-fix) ───────────────────────────────────────
+  # Ruff replaces flake8, isort, pyupgrade, and many other linters in one tool
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+    rev: v0.4.4
+    hooks:
+      - id: ruff
+        args:
+          - --fix                      # auto-fix safe issues
+          - --select=E,W,F,I,UP,B,SIM,TID,RUF
+            # E/W  = pycodestyle errors/warnings
+            # F    = pyflakes (unused imports, undefined names)
+            # I    = isort (import ordering)
+            # UP   = pyupgrade (modern Python syntax)
+            # B    = flake8-bugbear (likely bugs & bad practices)
+            # SIM  = flake8-simplify
+            # TID  = flake8-tidy-imports (no relative imports)
+            # RUF  = Ruff-native rules
+          - --ignore=E501              # line-length handled by formatter
+        types: [python]
+      - id: ruff-format                # replaces Black — PEP 8 formatting
+        types: [python]
+
+  # ─── Python: Type checking ─────────────────────────────────────────────────
+  - repo: https://github.com/pre-commit/mirrors-mypy
+    rev: v1.10.0
+    hooks:
+      - id: mypy
+        args:
+          - --ignore-missing-imports   # external stubs may be absent
+          - --no-strict-optional       # gradual adoption
+          - --warn-unused-ignores
+        additional_dependencies:
+          - pydantic>=2.0
+          - pydantic-settings>=2.0
+        files: ^src/
+
+  # ─── Security: detect hardcoded secrets ───────────────────────────────────
+  - repo: https://github.com/Yelp/detect-secrets
+    rev: v1.5.0
+    hooks:
+      - id: detect-secrets
+        args: ['--baseline', '.secrets.baseline']
+        exclude: '(\.env\.example|uv\.lock)'
+
+  # ─── Docs: RST / Sphinx lint ───────────────────────────────────────────────
+  - repo: https://github.com/PyCQA/doc8
+    rev: v1.1.1
+    hooks:
+      - id: doc8
+        args: ['--max-line-length=100']
+        files: ^docs/source/.*\.rst$
+
+  # ─── YAML / GitHub Actions lint ────────────────────────────────────────────
+  - repo: https://github.com/adrienverge/yamllint
+    rev: v1.35.1
+    hooks:
+      - id: yamllint
+        args: ['-d', '{extends: relaxed, rules: {line-length: {max: 200}}}']
+        exclude: '^(helm/|k8s/)'
+        files: \.(ya?ml)$
+
+  # ─── Markdown lint ─────────────────────────────────────────────────────────
+  - repo: https://github.com/igorshubovych/markdownlint-cli
+    rev: v0.41.0
+    hooks:
+      - id: markdownlint
+        args: ['--disable', 'MD013', 'MD033', 'MD041']
+          # MD013 = line length (too strict for docs)
+          # MD033 = inline HTML (used in README tables)
+          # MD041 = first heading rule
+
+# ─── Global settings ──────────────────────────────────────────────────────────
+default_language_version:
+  python: python3.12
+
+ci:
+  autofix_commit_msg: "style: auto-fix pre-commit hooks"
+  autoupdate_commit_msg: "chore(pre-commit): autoupdate hook revisions"
+  autoupdate_schedule: monthly

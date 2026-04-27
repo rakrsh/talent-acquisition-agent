@@ -1,0 +1,1105 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Index &mdash; Job Agent 0.1.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=9edc463e" />
+
+  
+      <script src="_static/jquery.js?v=5d32c60e"></script>
+      <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js?v=2389946f"></script>
+      <script src="_static/doctools.js?v=888ff710"></script>
+      <script src="_static/sphinx_highlight.js?v=4825356b"></script>
+      <script src="https://cdn.jsdelivr.net/npm/d3@7.9.0/dist/d3.min.js"></script>
+      <script type="module">import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@11.12.1/dist/mermaid.esm.min.mjs";
+
+
+
+
+
+const initStyles = () => {
+    const defaultStyle = document.createElement('style');
+    defaultStyle.textContent = `pre.mermaid {
+    /* Same as .mermaid-container > pre */
+    display: block;
+    width: 100%;
+}
+
+pre.mermaid > svg {
+    /* Same as .mermaid-container > pre > svg */
+    height: 500px;
+    width: 100%;
+    max-width: 100% !important;
+}`;
+    document.head.appendChild(defaultStyle);
+
+    const fullscreenStyle = document.createElement('style');
+    fullscreenStyle.textContent = `.mermaid-container {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+}
+
+.mermaid-container > pre {
+    display: block;
+    width: 100%;
+}
+
+.mermaid-container > pre > svg {
+    height: 500px;
+    width: 100%;
+    max-width: 100% !important;
+}
+
+.mermaid-fullscreen-btn {
+    width: 28px;
+    height: 28px;
+    background: rgba(255, 255, 255, 0.95);
+    border: 1px solid rgba(0, 0, 0, 0.3);
+    border-radius: 4px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+    font-size: 14px;
+    line-height: 1;
+    padding: 0;
+    color: #333;
+}
+
+.mermaid-fullscreen-btn:hover {
+    opacity: 100% !important;
+    background: rgba(255, 255, 255, 1);
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.3);
+    transform: scale(1.1);
+}
+
+.mermaid-fullscreen-btn.dark-theme {
+    background: rgba(50, 50, 50, 0.95);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    color: #e0e0e0;
+}
+
+.mermaid-fullscreen-btn.dark-theme:hover {
+    background: rgba(60, 60, 60, 1);
+    box-shadow: 0 3px 10px rgba(255, 255, 255, 0.2);
+}
+
+.mermaid-fullscreen-modal {
+    display: none;
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    width: 95vw;
+    height: 100vh;
+    background: rgba(255, 255, 255, 0.98);
+    z-index: 9999;
+    padding: 20px;
+    overflow: auto;
+}
+
+.mermaid-fullscreen-modal.dark-theme {
+    background: rgba(0, 0, 0, 0.98);
+}
+
+.mermaid-fullscreen-modal.active {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.mermaid-container-fullscreen {
+    position: relative;
+    width: 95vw;
+    height: 90vh;
+    max-width: 95vw;
+    max-height: 90vh;
+    background: white;
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+    overflow: auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.mermaid-container-fullscreen.dark-theme {
+    background: #1a1a1a;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.8);
+}
+
+.mermaid-container-fullscreen pre.mermaid {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.mermaid-container-fullscreen .mermaid svg {
+    height: 100% !important;
+    width: 100% !important;
+    cursor: grab;
+}
+
+.mermaid-fullscreen-close {
+    position: fixed !important;
+    top: 20px !important;
+    right: 20px !important;
+    width: 40px;
+    height: 40px;
+    background: rgba(255, 255, 255, 0.95);
+    border: 1px solid rgba(0, 0, 0, 0.2);
+    border-radius: 50%;
+    cursor: pointer;
+    z-index: 10000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    transition: all 0.2s;
+    font-size: 24px;
+    line-height: 1;
+    color: #333;
+}
+
+.mermaid-fullscreen-close:hover {
+    background: white;
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.4);
+    transform: scale(1.1);
+}
+
+.mermaid-fullscreen-close.dark-theme {
+    background: rgba(50, 50, 50, 0.95);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: #e0e0e0;
+}
+
+.mermaid-fullscreen-close.dark-theme:hover {
+    background: rgba(60, 60, 60, 1);
+    box-shadow: 0 6px 16px rgba(255, 255, 255, 0.2);
+}
+
+.mermaid-fullscreen-modal .mermaid-fullscreen-btn {
+    display: none !important;
+}`;
+    document.head.appendChild(fullscreenStyle);
+}
+
+// Detect if page has dark background
+const isDarkTheme = () => {
+    // We use a set of heuristics:
+    // 1. Check for common dark mode classes or attributes
+    // 2. Check computed background color brightness
+    if (document.documentElement.classList.contains('dark') ||
+        document.documentElement.getAttribute('data-theme') === 'dark' ||
+        document.body.classList.contains('dark') ||
+        document.body.getAttribute('data-theme') === 'dark') {
+        // console.log("Dark theme detected via class/attribute");
+        return true;
+    }
+    if (document.documentElement.classList.contains('light') ||
+        document.documentElement.getAttribute('data-theme') === 'light' ||
+        document.body.classList.contains('light') ||
+        document.body.getAttribute('data-theme') === 'light') {
+        // console.log("Light theme detected via class/attribute");
+        return false;
+    }
+    if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        // console.log("Dark theme detected via prefers-color-scheme");
+        return true;
+    }
+    const bgColor = window.getComputedStyle(document.body).backgroundColor;
+    const match = bgColor.match(/rgb\((\d+),\s*(\d+),\s*(\d+)/);
+    if (match) {
+        const r = parseInt(match[1]);
+        const g = parseInt(match[2]);
+        const b = parseInt(match[3]);
+        const brightness = (r * 299 + g * 587 + b * 114) / 1000;
+        // console.log("Background color brightness:", brightness);
+        return brightness < 128;
+    }
+    // console.log("No dark or light theme detected, defaulting to light theme");
+    return false;
+};
+
+let darkTheme = isDarkTheme();
+let modal = null;
+let modalContent = null;
+let previousScrollOffset = [window.scrollX, window.scrollY];
+
+const runMermaid = async (rerun) => {
+    console.log("Running mermaid diagrams, rerun =", rerun);
+    // clear all existing mermaid charts
+    let all_mermaids = document.querySelectorAll(".mermaid");
+
+    if (rerun) {
+        all_mermaids.forEach((el) => {
+            if(!el.hasAttribute("data-original-code")) {
+                // store original code
+                // console.log(`Storing original code for first run: `, el.innerHTML);
+                el.setAttribute('data-original-code', el.innerHTML);
+            }
+            if(el.getAttribute("data-processed") === "true") {
+                // remove and restore original
+                el.removeAttribute("data-processed");
+                // console.log(`Restoring original code for re-run: `, el.getAttribute('data-original-code'));
+                el.innerHTML = el.getAttribute('data-original-code');
+            } else {
+                // store original code
+                // console.log(`Storing original code for re-run: `, el.innerHTML);
+                el.setAttribute('data-original-code', el.innerHTML);
+            }
+        });
+        await mermaid.run();
+    }
+
+    all_mermaids = document.querySelectorAll(".mermaid");
+    const mermaids_processed = document.querySelectorAll(".mermaid[data-processed='true']");
+
+    if ("False" === "True") {
+        const mermaids_to_add_zoom = -1 === -1 ? all_mermaids.length : -1;
+        if(mermaids_to_add_zoom > 0) {
+            var svgs = d3.selectAll("");
+            if(all_mermaids.length !== mermaids_processed.length) {
+                setTimeout(() => runMermaid(false), 200);
+                return;
+            } else if(svgs.size() !== mermaids_to_add_zoom) {
+                setTimeout(() => runMermaid(false), 200);
+                return;
+            } else {
+                svgs.each(function() {
+                    var svg = d3.select(this);
+                    svg.html("<g class='wrapper'>" + svg.html() + "</g>");
+                    var inner = svg.select("g");
+                    var zoom = d3.zoom().on("zoom", function(event) {
+                        inner.attr("transform", event.transform);
+                    });
+                    svg.call(zoom);
+                });
+            }
+        }
+    } else if(all_mermaids.length !== mermaids_processed.length) {
+        // Wait for mermaid to process all diagrams
+        setTimeout(() => runMermaid(false), 200);
+        return;
+    }
+
+    // Stop here if not adding fullscreen capability
+    if ("True" !== "True") return;
+
+    if (modal !== null ) {
+        // Destroy existing modal
+        modal.remove();
+        modal = null;
+        modalContent = null;
+    }
+
+    modal = document.createElement('div');
+    modal.className = 'mermaid-fullscreen-modal' + (darkTheme ? ' dark-theme' : '');
+    modal.setAttribute('role', 'dialog');
+    modal.setAttribute('aria-modal', 'true');
+    modal.setAttribute('aria-label', 'Fullscreen diagram viewer');
+    modal.innerHTML = `
+        <button class="mermaid-fullscreen-close${darkTheme ? ' dark-theme' : ''}" aria-label="Close fullscreen">✕</button>
+        <div class="mermaid-container-fullscreen${darkTheme ? ' dark-theme' : ''}"></div>
+    `;
+    document.body.appendChild(modal);
+
+    modalContent = modal.querySelector('.mermaid-container-fullscreen');
+    const closeBtn = modal.querySelector('.mermaid-fullscreen-close');
+
+    const closeModal = () => {
+        modal.classList.remove('active');
+        modalContent.innerHTML = '';
+        document.body.style.overflow = ''
+        window.scrollTo({left: previousScrollOffset[0], top: previousScrollOffset[1], behavior: 'instant'});
+    };
+
+    closeBtn.addEventListener('click', closeModal);
+    modal.addEventListener('click', (e) => {
+        if (e.target === modal) closeModal();
+    });
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && modal.classList.contains('active')) {
+            closeModal();
+        }
+    });
+
+    document.querySelectorAll('.mermaid').forEach((mermaidDiv) => {
+        if (mermaidDiv.parentNode.classList.contains('mermaid-container') ||
+            mermaidDiv.closest('.mermaid-fullscreen-modal')) {
+            // Already processed, adjust button class if needed
+            const existingBtn = mermaidDiv.parentNode.querySelector('.mermaid-fullscreen-btn');
+            if (existingBtn) {
+                existingBtn.className = 'mermaid-fullscreen-btn' + (darkTheme ? ' dark-theme' : '');
+            }
+            return;
+        }
+
+        const container = document.createElement('div');
+        container.className = 'mermaid-container';
+        mermaidDiv.parentNode.insertBefore(container, mermaidDiv);
+        container.appendChild(mermaidDiv);
+
+        const fullscreenBtn = document.createElement('button');
+        fullscreenBtn.className = 'mermaid-fullscreen-btn' + (darkTheme ? ' dark-theme' : '');
+        fullscreenBtn.setAttribute('aria-label', 'View diagram in fullscreen');
+        fullscreenBtn.textContent = '⛶';
+        fullscreenBtn.style.opacity = '50%';
+
+        // Calculate dynamic position based on diagram's margin and padding
+        const diagramStyle = window.getComputedStyle(mermaidDiv);
+        const marginTop = parseFloat(diagramStyle.marginTop) || 0;
+        const marginRight = parseFloat(diagramStyle.marginRight) || 0;
+        const paddingTop = parseFloat(diagramStyle.paddingTop) || 0;
+        const paddingRight = parseFloat(diagramStyle.paddingRight) || 0;
+        fullscreenBtn.style.top = `${marginTop + paddingTop + 4}px`;
+        fullscreenBtn.style.right = `${marginRight + paddingRight + 4}px`;
+
+        fullscreenBtn.addEventListener('click', () => {
+            previousScrollOffset = [window.scroll, window.scrollY];
+            const clone = mermaidDiv.cloneNode(true);
+            modalContent.innerHTML = '';
+            modalContent.appendChild(clone);
+
+            const svg = clone.querySelector('svg');
+            if (svg) {
+                svg.removeAttribute('width');
+                svg.removeAttribute('height');
+                svg.style.width = '100%';
+                svg.style.height = 'auto';
+                svg.style.maxWidth = '100%';
+                svg.style.sdisplay = 'block';
+
+                if ("False" === "True") {
+                    setTimeout(() => {
+                        const g = svg.querySelector('g');
+                        if (g) {
+                            var svgD3 = d3.select(svg);
+                            svgD3.html("<g class='wrapper'>" + svgD3.html() + "</g>");
+                            var inner = svgD3.select("g");
+                            var zoom = d3.zoom().on("zoom", function(event) {
+                                inner.attr("transform", event.transform);
+                            });
+                            svgD3.call(zoom);
+                        }
+                    }, 100);
+                }
+            }
+
+            modal.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        });
+        container.appendChild(fullscreenBtn);
+    });
+};
+
+const load = async () => {
+    initStyles();
+
+    await runMermaid(true);
+
+    const reRunIfThemeChanges = async () => {
+        const newDarkTheme = isDarkTheme();
+        if (newDarkTheme !== darkTheme) {
+            darkTheme = newDarkTheme;
+            console.log("Theme change detected, re-running mermaid with", darkTheme ? "dark" : "default", "theme");
+            await mermaid.initialize(
+                {...JSON.parse(
+                    `{"startOnLoad": false}`
+                ),
+                ...{ darkMode: darkTheme, theme: darkTheme ? 'dark' : 'default' },
+                }
+            );
+            await runMermaid(true);
+        }
+    };
+
+    // Update theme classes when theme changes
+    const themeObserver = new MutationObserver(reRunIfThemeChanges);
+    themeObserver.observe(document.documentElement, {
+        attributes: true,
+        attributeFilter: ['class', 'style', 'data-theme']
+    });
+    themeObserver.observe(document.body, {
+        attributes: true,
+        attributeFilter: ['class', 'style', 'data-theme']
+    });
+};
+
+
+
+
+
+console.log("Initializing mermaid with", darkTheme ? "dark" : "default", "theme");
+mermaid.initialize(
+    {...JSON.parse(
+        `{"startOnLoad": false}`
+    ),
+    ...{ darkMode: darkTheme, theme: darkTheme ? 'dark' : 'default' },
+    }
+);
+
+window.addEventListener("load", load);
+window.runMermaid = runMermaid;</script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="#" />
+    <link rel="search" title="Search" href="search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            Job Agent
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="introduction.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="configuration.html">Configuration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="usage.html">Usage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="12factor.html">12-Factor App Compliance</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api.html">API Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api.html#indices-and-tables">Indices and Tables</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Job Agent</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Index</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+
+<h1 id="index">Index</h1>
+
+<div class="genindex-jumpbox">
+ <a href="#A"><strong>A</strong></a>
+ | <a href="#C"><strong>C</strong></a>
+ | <a href="#D"><strong>D</strong></a>
+ | <a href="#E"><strong>E</strong></a>
+ | <a href="#F"><strong>F</strong></a>
+ | <a href="#G"><strong>G</strong></a>
+ | <a href="#H"><strong>H</strong></a>
+ | <a href="#I"><strong>I</strong></a>
+ | <a href="#J"><strong>J</strong></a>
+ | <a href="#L"><strong>L</strong></a>
+ | <a href="#M"><strong>M</strong></a>
+ | <a href="#N"><strong>N</strong></a>
+ | <a href="#O"><strong>O</strong></a>
+ | <a href="#P"><strong>P</strong></a>
+ | <a href="#R"><strong>R</strong></a>
+ | <a href="#S"><strong>S</strong></a>
+ | <a href="#T"><strong>T</strong></a>
+ | <a href="#U"><strong>U</strong></a>
+ | <a href="#W"><strong>W</strong></a>
+ | <a href="#Z"><strong>Z</strong></a>
+ 
+</div>
+<h2 id="A">A</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="api/server.html#server.add_application">add_application() (in module server)</a>
+
+      <ul>
+        <li><a href="api/modules/tracker.html#modules.tracker.ApplicationTracker.add_application">(modules.tracker.ApplicationTracker method)</a>
+</li>
+      </ul></li>
+      <li><a href="api/settings.html#settings.Settings.adzuna_api_key">adzuna_api_key (settings.Settings attribute)</a>
+</li>
+      <li><a href="api/settings.html#settings.Settings.adzuna_app_id">adzuna_app_id (settings.Settings attribute)</a>
+</li>
+      <li><a href="api/settings.html#settings.Settings.adzuna_country">adzuna_country (settings.Settings attribute)</a>
+</li>
+      <li><a href="api/settings.html#settings.Settings.adzuna_enabled">adzuna_enabled (settings.Settings attribute)</a>
+</li>
+      <li><a href="api/server.html#server.ApplicationRequest">ApplicationRequest (class in server)</a>
+</li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="api/modules/tracker.html#modules.tracker.ApplicationTracker">ApplicationTracker (class in modules.tracker)</a>
+</li>
+      <li><a href="api/modules/job_search.html#modules.job_search.Job.applied">applied (modules.job_search.Job attribute)</a>
+</li>
+      <li><a href="api/modules/job_search.html#modules.job_search.Job.applied_date">applied_date (modules.job_search.Job attribute)</a>
+
+      <ul>
+        <li><a href="api/modules/tracker.html#modules.tracker.JobApplication.applied_date">(modules.tracker.JobApplication attribute)</a>
+</li>
+      </ul></li>
+      <li><a href="api/settings.html#settings.Settings.arbeitnow_enabled">arbeitnow_enabled (settings.Settings attribute)</a>
+</li>
+      <li><a href="api/settings.html#settings.Settings.ashby_companies">ashby_companies (settings.Settings attribute)</a>
+</li>
+      <li><a href="api/settings.html#settings.Settings.ashby_enabled">ashby_enabled (settings.Settings attribute)</a>
+</li>
+      <li><a href="api/settings.html#settings.Settings.auto_apply_enabled">auto_apply_enabled (settings.Settings attribute)</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="C">C</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="api/settings.html#settings.Settings.careerjet_enabled">careerjet_enabled (settings.Settings attribute)</a>
+</li>
+      <li><a href="api/modules/job_search.html#modules.job_search.Job.company">company (modules.job_search.Job attribute)</a>
+
+      <ul>
+        <li><a href="api/modules/tracker.html#modules.tracker.JobApplication.company">(modules.tracker.JobApplication attribute)</a>
+</li>
+        <li><a href="api/server.html#server.ApplicationRequest.company">(server.ApplicationRequest attribute)</a>
+</li>
+        <li><a href="api/server.html#server.JobResponse.company">(server.JobResponse attribute)</a>
+</li>
+      </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="api/settings.html#settings.Settings.config_file_path">config_file_path (settings.Settings attribute)</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="D">D</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="api/settings.html#settings.Settings.data_dir">data_dir (settings.Settings attribute)</a>
+</li>
+      <li><a href="api/settings.html#settings.Settings.database_url">database_url (settings.Settings attribute)</a>
+</li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="api/settings.html#settings.Settings.db_type">db_type (settings.Settings attribute)</a>
+</li>
+      <li><a href="api/modules/job_search.html#modules.job_search.Job.description">description (modules.job_search.Job attribute)</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="E">E</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="api/settings.html#settings.Settings.Config.env_file">env_file (settings.Settings.Config attribute)</a>
+</li>
+      <li><a href="api/settings.html#settings.Settings.Config.env_file_encoding">env_file_encoding (settings.Settings.Config attribute)</a>
+</li>
+      <li><a href="api/settings.html#settings.Settings.env_mode">env_mode (settings.Settings attribute)</a>
+</li>
+      <li>
+    environment variable
+
+      <ul>
+        <li><a href="api/settings.html#envvar-DATABASE_URL">DATABASE_URL</a>
+</li>
+        <li><a href="api/settings.html#envvar-ENV_MODE">ENV_MODE</a>
+</li>
+        <li><a href="api/settings.html#envvar-LLM_MODEL">LLM_MODEL</a>
+</li>
+        <li><a href="api/settings.html#envvar-LOG_LEVEL">LOG_LEVEL</a>
+</li>
+        <li><a href="api/settings.html#envvar-OLLAMA_HOST">OLLAMA_HOST</a>
+</li>
+        <li><a href="api/settings.html#envvar-RECIPIENT_EMAIL">RECIPIENT_EMAIL</a>
+</li>
+        <li><a href="api/settings.html#envvar-RECIPIENT_PHONE">RECIPIENT_PHONE</a>
+</li>
+        <li><a href="api/settings.html#envvar-SENDER_EMAIL">SENDER_EMAIL</a>
+</li>
+        <li><a href="api/settings.html#envvar-SENDER_PASSWORD">SENDER_PASSWORD</a>
+</li>
+        <li><a href="api/settings.html#envvar-TWILIO_PHONE">TWILIO_PHONE</a>
+</li>
+        <li><a href="api/settings.html#envvar-TWILIO_SID">TWILIO_SID</a>
+</li>
+        <li><a href="api/settings.html#envvar-TWILIO_TOKEN">TWILIO_TOKEN</a>
+</li>
+      </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="api/modules/tracker.html#modules.tracker.ApplicationTracker.export_csv">export_csv() (modules.tracker.ApplicationTracker method)</a>
+</li>
+      <li><a href="api/settings.html#settings.Settings.Config.extra">extra (settings.Settings.Config attribute)</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="F">F</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="api/modules/job_search.html#modules.job_search.JobSearcher.filter_new_jobs">filter_new_jobs() (modules.job_search.JobSearcher method)</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="G">G</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="api/server.html#server.get_application_status">get_application_status() (in module server)</a>
+</li>
+      <li><a href="api/server.html#server.get_applications">get_applications() (in module server)</a>
+
+      <ul>
+        <li><a href="api/modules/tracker.html#modules.tracker.ApplicationTracker.get_applications">(modules.tracker.ApplicationTracker method)</a>
+</li>
+      </ul></li>
+      <li><a href="api/modules/tracker.html#modules.tracker.ApplicationTracker.get_summary">get_summary() (modules.tracker.ApplicationTracker method)</a>
+</li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="api/settings.html#settings.Settings.github_token">github_token (settings.Settings attribute)</a>
+</li>
+      <li><a href="api/settings.html#settings.Settings.glassdoor_enabled">glassdoor_enabled (settings.Settings attribute)</a>
+</li>
+      <li><a href="api/settings.html#settings.Settings.greenhouse_companies">greenhouse_companies (settings.Settings attribute)</a>
+</li>
+      <li><a href="api/settings.html#settings.Settings.greenhouse_enabled">greenhouse_enabled (settings.Settings attribute)</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="H">H</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="api/server.html#server.health">health() (in module server)</a>
+</li>
+      <li><a href="api/settings.html#settings.Settings.himalayas_enabled">himalayas_enabled (settings.Settings attribute)</a>
+</li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="api/settings.html#settings.Settings.http_host">http_host (settings.Settings attribute)</a>
+</li>
+      <li><a href="api/settings.html#settings.Settings.http_port">http_port (settings.Settings attribute)</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="I">I</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="api/settings.html#settings.Settings.indeed_enabled">indeed_enabled (settings.Settings attribute)</a>
+</li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="api/settings.html#settings.Settings.indeed_publisher_id">indeed_publisher_id (settings.Settings attribute)</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="J">J</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="api/modules/job_search.html#modules.job_search.Job">Job (class in modules.job_search)</a>
+</li>
+      <li><a href="api/modules/tracker.html#modules.tracker.JobApplication">JobApplication (class in modules.tracker)</a>
+</li>
+      <li><a href="api/settings.html#settings.Settings.jobicy_enabled">jobicy_enabled (settings.Settings attribute)</a>
+</li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="api/server.html#server.JobResponse">JobResponse (class in server)</a>
+</li>
+      <li><a href="api/modules/job_search.html#modules.job_search.JobSearcher">JobSearcher (class in modules.job_search)</a>
+</li>
+      <li><a href="api/settings.html#settings.Settings.jooble_enabled">jooble_enabled (settings.Settings attribute)</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="L">L</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="api/settings.html#settings.Settings.lever_companies">lever_companies (settings.Settings attribute)</a>
+</li>
+      <li><a href="api/settings.html#settings.Settings.lever_enabled">lever_enabled (settings.Settings attribute)</a>
+</li>
+      <li><a href="api/server.html#server.lifespan">lifespan() (in module server)</a>
+</li>
+      <li><a href="api/settings.html#settings.Settings.linkedin_client_id">linkedin_client_id (settings.Settings attribute)</a>
+</li>
+      <li><a href="api/settings.html#settings.Settings.linkedin_client_secret">linkedin_client_secret (settings.Settings attribute)</a>
+</li>
+      <li><a href="api/settings.html#settings.Settings.linkedin_enabled">linkedin_enabled (settings.Settings attribute)</a>
+</li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="api/settings.html#settings.Settings.llm_model">llm_model (settings.Settings attribute)</a>
+</li>
+      <li><a href="api/modules/job_search.html#modules.job_search.Job.location">location (modules.job_search.Job attribute)</a>
+
+      <ul>
+        <li><a href="api/modules/tracker.html#modules.tracker.JobApplication.location">(modules.tracker.JobApplication attribute)</a>
+</li>
+        <li><a href="api/server.html#server.ApplicationRequest.location">(server.ApplicationRequest attribute)</a>
+</li>
+        <li><a href="api/server.html#server.JobResponse.location">(server.JobResponse attribute)</a>
+</li>
+      </ul></li>
+      <li><a href="api/settings.html#settings.Settings.log_level">log_level (settings.Settings attribute)</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="M">M</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li>
+    main
+
+      <ul>
+        <li><a href="api/main.html#module-main">module</a>
+</li>
+      </ul></li>
+      <li><a href="api/settings.html#settings.Settings.max_jobs_per_search">max_jobs_per_search (settings.Settings attribute)</a>
+</li>
+      <li><a href="api/server.html#server.ApplicationRequest.model_config">model_config (server.ApplicationRequest attribute)</a>
+
+      <ul>
+        <li><a href="api/server.html#server.JobResponse.model_config">(server.JobResponse attribute)</a>
+</li>
+        <li><a href="api/server.html#server.SearchRequest.model_config">(server.SearchRequest attribute)</a>
+</li>
+        <li><a href="api/settings.html#settings.Settings.model_config">(settings.Settings attribute)</a>
+</li>
+      </ul></li>
+      <li>
+    module
+
+      <ul>
+        <li><a href="api/main.html#module-main">main</a>
+</li>
+        <li><a href="api/modules/job_search.html#module-modules.job_search">modules.job_search</a>
+</li>
+        <li><a href="api/modules/notifications.html#module-modules.notifications">modules.notifications</a>
+</li>
+        <li><a href="api/modules/tracker.html#module-modules.tracker">modules.tracker</a>
+</li>
+        <li><a href="api/server.html#module-server">server</a>
+</li>
+        <li><a href="api/settings.html#module-settings">settings</a>
+</li>
+      </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li>
+    modules.job_search
+
+      <ul>
+        <li><a href="api/modules/job_search.html#module-modules.job_search">module</a>
+</li>
+      </ul></li>
+      <li>
+    modules.notifications
+
+      <ul>
+        <li><a href="api/modules/notifications.html#module-modules.notifications">module</a>
+</li>
+      </ul></li>
+      <li>
+    modules.tracker
+
+      <ul>
+        <li><a href="api/modules/tracker.html#module-modules.tracker">module</a>
+</li>
+      </ul></li>
+      <li><a href="api/settings.html#settings.Settings.monster_enabled">monster_enabled (settings.Settings attribute)</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="N">N</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="api/modules/tracker.html#modules.tracker.JobApplication.notes">notes (modules.tracker.JobApplication attribute)</a>
+</li>
+      <li><a href="api/modules/notifications.html#modules.notifications.NotificationConfig">NotificationConfig (class in modules.notifications)</a>
+</li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="api/modules/notifications.html#modules.notifications.NotificationService">NotificationService (class in modules.notifications)</a>
+</li>
+      <li><a href="api/modules/notifications.html#modules.notifications.NotificationService.notify_new_jobs">notify_new_jobs() (modules.notifications.NotificationService method)</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="O">O</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="api/settings.html#settings.Settings.ollama_host">ollama_host (settings.Settings attribute)</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="P">P</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="api/modules/job_search.html#modules.job_search.Job.posted_date">posted_date (modules.job_search.Job attribute)</a>
+
+      <ul>
+        <li><a href="api/server.html#server.JobResponse.posted_date">(server.JobResponse attribute)</a>
+</li>
+      </ul></li>
+  </ul></td>
+</tr></table>
+
+<h2 id="R">R</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="api/modules/notifications.html#modules.notifications.NotificationConfig.recipient_email">recipient_email (modules.notifications.NotificationConfig attribute)</a>
+
+      <ul>
+        <li><a href="api/settings.html#settings.Settings.recipient_email">(settings.Settings attribute)</a>
+</li>
+      </ul></li>
+      <li><a href="api/modules/notifications.html#modules.notifications.NotificationConfig.recipient_phone">recipient_phone (modules.notifications.NotificationConfig attribute)</a>
+
+      <ul>
+        <li><a href="api/settings.html#settings.Settings.recipient_phone">(settings.Settings attribute)</a>
+</li>
+      </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="api/settings.html#settings.Settings.remote_ok_enabled">remote_ok_enabled (settings.Settings attribute)</a>
+</li>
+      <li><a href="api/settings.html#settings.Settings.remotive_enabled">remotive_enabled (settings.Settings attribute)</a>
+</li>
+      <li><a href="api/server.html#server.root">root() (in module server)</a>
+</li>
+      <li><a href="api/server.html#server.run_server">run_server() (in module server)</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="S">S</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="api/modules/job_search.html#modules.job_search.Job.salary">salary (modules.job_search.Job attribute)</a>
+</li>
+      <li><a href="api/modules/job_search.html#modules.job_search.JobSearcher.search_all">search_all() (modules.job_search.JobSearcher method)</a>
+</li>
+      <li><a href="api/settings.html#settings.Settings.search_interval_hours">search_interval_hours (settings.Settings attribute)</a>
+</li>
+      <li><a href="api/server.html#server.search_jobs">search_jobs() (in module server)</a>
+</li>
+      <li><a href="api/modules/job_search.html#modules.job_search.Job.search_term">search_term (modules.job_search.Job attribute)</a>
+</li>
+      <li><a href="api/server.html#server.SearchRequest">SearchRequest (class in server)</a>
+</li>
+      <li><a href="api/modules/notifications.html#modules.notifications.NotificationService.send_email">send_email() (modules.notifications.NotificationService method)</a>
+</li>
+      <li><a href="api/modules/notifications.html#modules.notifications.NotificationService.send_sms">send_sms() (modules.notifications.NotificationService method)</a>
+</li>
+      <li><a href="api/modules/notifications.html#modules.notifications.NotificationConfig.sender_email">sender_email (modules.notifications.NotificationConfig attribute)</a>
+
+      <ul>
+        <li><a href="api/settings.html#settings.Settings.sender_email">(settings.Settings attribute)</a>
+</li>
+      </ul></li>
+      <li><a href="api/modules/notifications.html#modules.notifications.NotificationConfig.sender_password">sender_password (modules.notifications.NotificationConfig attribute)</a>
+
+      <ul>
+        <li><a href="api/settings.html#settings.Settings.sender_password">(settings.Settings attribute)</a>
+</li>
+      </ul></li>
+      <li>
+    server
+
+      <ul>
+        <li><a href="api/server.html#module-server">module</a>
+</li>
+      </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li>
+    settings
+
+      <ul>
+        <li><a href="api/settings.html#module-settings">module</a>
+</li>
+      </ul></li>
+      <li><a href="api/settings.html#settings.Settings">Settings (class in settings)</a>
+</li>
+      <li><a href="api/settings.html#settings.settings">settings (in module settings)</a>
+</li>
+      <li><a href="api/settings.html#settings.Settings.Config">Settings.Config (class in settings)</a>
+</li>
+      <li><a href="api/settings.html#settings.Settings.simplyhired_enabled">simplyhired_enabled (settings.Settings attribute)</a>
+</li>
+      <li><a href="api/modules/notifications.html#modules.notifications.NotificationConfig.smtp_host">smtp_host (modules.notifications.NotificationConfig attribute)</a>
+
+      <ul>
+        <li><a href="api/settings.html#settings.Settings.smtp_host">(settings.Settings attribute)</a>
+</li>
+      </ul></li>
+      <li><a href="api/modules/notifications.html#modules.notifications.NotificationConfig.smtp_port">smtp_port (modules.notifications.NotificationConfig attribute)</a>
+
+      <ul>
+        <li><a href="api/settings.html#settings.Settings.smtp_port">(settings.Settings attribute)</a>
+</li>
+      </ul></li>
+      <li><a href="api/modules/job_search.html#modules.job_search.Job.source">source (modules.job_search.Job attribute)</a>
+
+      <ul>
+        <li><a href="api/modules/tracker.html#modules.tracker.JobApplication.source">(modules.tracker.JobApplication attribute)</a>
+</li>
+        <li><a href="api/server.html#server.ApplicationRequest.source">(server.ApplicationRequest attribute)</a>
+</li>
+        <li><a href="api/server.html#server.JobResponse.source">(server.JobResponse attribute)</a>
+</li>
+      </ul></li>
+      <li><a href="api/modules/tracker.html#modules.tracker.JobApplication.status">status (modules.tracker.JobApplication attribute)</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="T">T</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="api/server.html#server.SearchRequest.tags">tags (server.SearchRequest attribute)</a>
+</li>
+      <li><a href="api/settings.html#settings.Settings.the_muse_api_key">the_muse_api_key (settings.Settings attribute)</a>
+</li>
+      <li><a href="api/settings.html#settings.Settings.the_muse_enabled">the_muse_enabled (settings.Settings attribute)</a>
+</li>
+      <li><a href="api/modules/job_search.html#modules.job_search.Job.title">title (modules.job_search.Job attribute)</a>
+
+      <ul>
+        <li><a href="api/modules/tracker.html#modules.tracker.JobApplication.title">(modules.tracker.JobApplication attribute)</a>
+</li>
+        <li><a href="api/server.html#server.ApplicationRequest.title">(server.ApplicationRequest attribute)</a>
+</li>
+        <li><a href="api/server.html#server.JobResponse.title">(server.JobResponse attribute)</a>
+</li>
+      </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="api/modules/notifications.html#modules.notifications.NotificationConfig.twilio_phone">twilio_phone (modules.notifications.NotificationConfig attribute)</a>
+
+      <ul>
+        <li><a href="api/settings.html#settings.Settings.twilio_phone">(settings.Settings attribute)</a>
+</li>
+      </ul></li>
+      <li><a href="api/modules/notifications.html#modules.notifications.NotificationConfig.twilio_sid">twilio_sid (modules.notifications.NotificationConfig attribute)</a>
+
+      <ul>
+        <li><a href="api/settings.html#settings.Settings.twilio_sid">(settings.Settings attribute)</a>
+</li>
+      </ul></li>
+      <li><a href="api/modules/notifications.html#modules.notifications.NotificationConfig.twilio_token">twilio_token (modules.notifications.NotificationConfig attribute)</a>
+
+      <ul>
+        <li><a href="api/settings.html#settings.Settings.twilio_token">(settings.Settings attribute)</a>
+</li>
+      </ul></li>
+  </ul></td>
+</tr></table>
+
+<h2 id="U">U</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="api/server.html#server.update_application_status">update_application_status() (in module server)</a>
+</li>
+      <li><a href="api/modules/tracker.html#modules.tracker.ApplicationTracker.update_status">update_status() (modules.tracker.ApplicationTracker method)</a>
+</li>
+      <li><a href="api/modules/job_search.html#modules.job_search.Job.url">url (modules.job_search.Job attribute)</a>
+
+      <ul>
+        <li><a href="api/modules/tracker.html#modules.tracker.JobApplication.url">(modules.tracker.JobApplication attribute)</a>
+</li>
+        <li><a href="api/server.html#server.ApplicationRequest.url">(server.ApplicationRequest attribute)</a>
+</li>
+        <li><a href="api/server.html#server.JobResponse.url">(server.JobResponse attribute)</a>
+</li>
+      </ul></li>
+  </ul></td>
+</tr></table>
+
+<h2 id="W">W</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="api/settings.html#settings.Settings.we_work_remotely_enabled">we_work_remotely_enabled (settings.Settings attribute)</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="Z">Z</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="api/settings.html#settings.Settings.ziprecruiter_api_key">ziprecruiter_api_key (settings.Settings attribute)</a>
+</li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="api/settings.html#settings.Settings.ziprecruiter_enabled">ziprecruiter_enabled (settings.Settings attribute)</a>
+</li>
+  </ul></td>
+</tr></table>
+
+
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2026, Job Agent.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

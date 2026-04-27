@@ -1,0 +1,37 @@
+{
+  "search_terms": [
+    {
+      "role": "python",
+      "keywords": ["python", "backend", "api"],
+      "locations": ["remote", "on-site", "hybrid"],
+      "job_types": ["full-time"]
+    },
+    {
+      "role": "devops",
+      "keywords": ["devops", "cloud", "automation"],
+      "locations": ["remote", "on-site", "hybrid"],
+      "job_types": ["full-time"]
+    },
+    {
+      "role": "site reliability engineer",
+      "keywords": ["site reliability engineer", "backend", "api"],
+      "locations": ["remote", "on-site", "hybrid"],
+      "job_types": ["full-time"]
+    },
+    {
+      "role": "javascript",
+      "keywords": ["javascript", "typescript", "node"],
+      "locations": ["remote", "on-site", "hybrid"],
+      "job_types": ["full-time"]
+    },
+    {
+      "role": "ai",
+      "keywords": ["machine learning", "ai", "data science"],
+      "locations": ["remote", "on-site", "hybrid"],
+      "job_types": ["full-time"]
+    }
+  ],
+  "excluded_companies": [],
+  "experience_level": ["mid", "senior"],
+  "date_posted_days": 7
+}

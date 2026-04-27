@@ -1,0 +1,353 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>12-Factor App Compliance &mdash; Job Agent 0.1.dev0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=9edc463e" />
+
+  
+      <script src="_static/jquery.js?v=5d32c60e"></script>
+      <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js?v=d7adbc44"></script>
+      <script src="_static/doctools.js?v=888ff710"></script>
+      <script src="_static/sphinx_highlight.js?v=4825356b"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="API Reference" href="api.html" />
+    <link rel="prev" title="Usage" href="usage.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            Job Agent
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="introduction.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="configuration.html">Configuration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="usage.html">Usage</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">12-Factor App Compliance</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#i-codebase">I. Codebase</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#ii-dependencies">II. Dependencies</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#iii-config">III. Config</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#iv-backing-services">IV. Backing Services</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#v-build-release-run">V. Build, Release, Run</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#vi-processes">VI. Processes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#vii-port-binding">VII. Port Binding</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#viii-concurrency">VIII. Concurrency</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#ix-disposability">IX. Disposability</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#x-dev-prod-parity">X. Dev/Prod Parity</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#xi-logs">XI. Logs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#xii-admin-processes">XII. Admin Processes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#summary-table">Summary Table</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="api.html">API Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api.html#indices-and-tables">Indices and Tables</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Job Agent</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">12-Factor App Compliance</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/12factor.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="factor-app-compliance">
+<h1>12-Factor App Compliance<a class="headerlink" href="#factor-app-compliance" title="Permalink to this heading"></a></h1>
+<p>Job Agent follows the <a class="reference external" href="https://12factor.net/">12-Factor</a> methodology for cloud-native application development.</p>
+<section id="i-codebase">
+<h2>I. Codebase<a class="headerlink" href="#i-codebase" title="Permalink to this heading"></a></h2>
+<p><strong>Principle</strong>: One codebase tracked in revision control, many deployments.</p>
+<ul class="simple">
+<li><p>Single git repository</p></li>
+<li><p>All configuration via environment variables</p></li>
+<li><p>Same code runs in development and production</p></li>
+</ul>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>git<span class="w"> </span>clone<span class="w"> </span>https://github.com/yourusername/talent-acquisition-agent.git
+</pre></div>
+</div>
+</section>
+<section id="ii-dependencies">
+<h2>II. Dependencies<a class="headerlink" href="#ii-dependencies" title="Permalink to this heading"></a></h2>
+<p><strong>Principle</strong>: Explicitly declare and isolate dependencies.</p>
+<ul class="simple">
+<li><p>All dependencies declared in <code class="docutils literal notranslate"><span class="pre">pyproject.toml</span></code></p></li>
+<li><p>No implicit reliance on system-wide packages</p></li>
+<li><p>Use <code class="docutils literal notranslate"><span class="pre">uv</span> <span class="pre">sync</span></code> to install</p></li>
+</ul>
+<div class="highlight-toml notranslate"><div class="highlight"><pre><span></span><span class="k">[project]</span>
+<span class="n">dependencies</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span>
+<span class="w">    </span><span class="s2">&quot;aiohttp&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="s2">&quot;fastapi&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="s2">&quot;pydantic-settings&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="s2">&quot;twilio&quot;</span><span class="p">,</span>
+<span class="p">]</span>
+</pre></div>
+</div>
+</section>
+<section id="iii-config">
+<h2>III. Config<a class="headerlink" href="#iii-config" title="Permalink to this heading"></a></h2>
+<p><strong>Principle</strong>: Store config in the environment.</p>
+<ul class="simple">
+<li><p>All configuration via environment variables</p></li>
+<li><p>No hardcoded values in source code</p></li>
+<li><p>Template provided in <code class="docutils literal notranslate"><span class="pre">.env.example</span></code></p></li>
+</ul>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>cp<span class="w"> </span>.env.example<span class="w"> </span>.env
+<span class="c1"># Edit .env with your values</span>
+</pre></div>
+</div>
+</section>
+<section id="iv-backing-services">
+<h2>IV. Backing Services<a class="headerlink" href="#iv-backing-services" title="Permalink to this heading"></a></h2>
+<p><strong>Principle</strong>: Treat backing services as attached resources.</p>
+<ul class="simple">
+<li><p>Remote OK API (job search)</p></li>
+<li><p>Twilio (SMS notifications)</p></li>
+<li><p>SMTP (email notifications)</p></li>
+<li><p>Local JSON file (application storage)</p></li>
+</ul>
+</section>
+<section id="v-build-release-run">
+<h2>V. Build, Release, Run<a class="headerlink" href="#v-build-release-run" title="Permalink to this heading"></a></h2>
+<p><strong>Principle</strong>: Strictly separate build and run stages.</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">uv</span> <span class="pre">sync</span></code> - Build/install</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">uv</span> <span class="pre">run</span></code> - Build and run in one step</p></li>
+</ul>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>uv<span class="w"> </span>run<span class="w"> </span>.<span class="se">\s</span>rc<span class="se">\m</span>ain.py
+</pre></div>
+</div>
+</section>
+<section id="vi-processes">
+<h2>VI. Processes<a class="headerlink" href="#vi-processes" title="Permalink to this heading"></a></h2>
+<p><strong>Principle</strong>: Execute the app as one or more stateless processes.</p>
+<ul class="simple">
+<li><p>No in-memory state between runs</p></li>
+<li><p>Data stored in external service (JSON file)</p></li>
+<li><p>Async/await for concurrency</p></li>
+</ul>
+</section>
+<section id="vii-port-binding">
+<h2>VII. Port Binding<a class="headerlink" href="#vii-port-binding" title="Permalink to this heading"></a></h2>
+<p><strong>Principle</strong>: Export HTTP as a service by binding to a port.</p>
+<ul class="simple">
+<li><p>FastAPI server binds to configurable port</p></li>
+<li><p>Default: <code class="docutils literal notranslate"><span class="pre">http://localhost:8080</span></code></p></li>
+</ul>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>uv<span class="w"> </span>run<span class="w"> </span>.<span class="se">\s</span>rc<span class="se">\s</span>erver.py
+</pre></div>
+</div>
+</section>
+<section id="viii-concurrency">
+<h2>VIII. Concurrency<a class="headerlink" href="#viii-concurrency" title="Permalink to this heading"></a></h2>
+<p><strong>Principle</strong>: Scale out via the process model.</p>
+<ul class="simple">
+<li><p>Use <code class="docutils literal notranslate"><span class="pre">asyncio.gather</span></code> for parallel job searches</p></li>
+<li><p>Multiple job sources searched simultaneously</p></li>
+</ul>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">results</span> <span class="o">=</span> <span class="k">await</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">gather</span><span class="p">(</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">_search_remote_ok</span><span class="p">(),</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">_search_indeed</span><span class="p">(),</span>
+    <span class="n">return_exceptions</span><span class="o">=</span><span class="kc">True</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="ix-disposability">
+<h2>IX. Disposability<a class="headerlink" href="#ix-disposability" title="Permalink to this heading"></a></h2>
+<p><strong>Principle</strong>: Maximize robustness with fast startup and graceful shutdown.</p>
+<ul class="simple">
+<li><p>Fast startup (&lt; 1 second)</p></li>
+<li><p>No complex initialization</p></li>
+<li><p>Clean async shutdown</p></li>
+</ul>
+</section>
+<section id="x-dev-prod-parity">
+<h2>X. Dev/Prod Parity<a class="headerlink" href="#x-dev-prod-parity" title="Permalink to this heading"></a></h2>
+<p><strong>Principle</strong>: Keep development, staging, and production as similar as possible.</p>
+<ul class="simple">
+<li><p>Same Python environment (uv)</p></li>
+<li><p>Same dependency resolution</p></li>
+<li><p>Same configuration mechanism</p></li>
+</ul>
+</section>
+<section id="xi-logs">
+<h2>XI. Logs<a class="headerlink" href="#xi-logs" title="Permalink to this heading"></a></h2>
+<p><strong>Principle</strong>: Treat logs as event streams.</p>
+<ul class="simple">
+<li><p>Structured logging via <code class="docutils literal notranslate"><span class="pre">config.py</span></code></p></li>
+<li><p>JSON format in production</p></li>
+<li><p>Human-readable in development</p></li>
+</ul>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">config</span><span class="w"> </span><span class="kn">import</span> <span class="n">logger</span>
+<span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Job search complete!&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="xii-admin-processes">
+<h2>XII. Admin Processes<a class="headerlink" href="#xii-admin-processes" title="Permalink to this heading"></a></h2>
+<p><strong>Principle</strong>: Run admin/management tasks as one-off processes.</p>
+<ul class="simple">
+<li><p>Separate modules for different concerns</p></li>
+<li><p>Job search, notifications, tracking as separate components</p></li>
+</ul>
+</section>
+<section id="summary-table">
+<h2>Summary Table<a class="headerlink" href="#summary-table" title="Permalink to this heading"></a></h2>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Factor</p></th>
+<th class="head"><p>Implementation</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><ol class="upperroman simple">
+<li><p>Codebase</p></li>
+</ol>
+</td>
+<td><p>Single git repo</p></td>
+</tr>
+<tr class="row-odd"><td><ol class="upperroman simple" start="2">
+<li><p>Dependencies</p></li>
+</ol>
+</td>
+<td><p><code class="docutils literal notranslate"><span class="pre">pyproject.toml</span></code></p></td>
+</tr>
+<tr class="row-even"><td><ol class="upperroman simple" start="3">
+<li><p>Config</p></li>
+</ol>
+</td>
+<td><p>Environment variables</p></td>
+</tr>
+<tr class="row-odd"><td><ol class="upperroman simple" start="4">
+<li><p>Backing Services</p></li>
+</ol>
+</td>
+<td><p>External APIs</p></td>
+</tr>
+<tr class="row-even"><td><ol class="upperalpha simple" start="22">
+<li><p>Build/Release/Run</p></li>
+</ol>
+</td>
+<td><p><code class="docutils literal notranslate"><span class="pre">uv</span> <span class="pre">run</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><ol class="upperroman simple" start="6">
+<li><p>Processes</p></li>
+</ol>
+</td>
+<td><p>Stateless async</p></td>
+</tr>
+<tr class="row-even"><td><ol class="upperroman simple" start="7">
+<li><p>Port Binding</p></li>
+</ol>
+</td>
+<td><p>FastAPI server</p></td>
+</tr>
+<tr class="row-odd"><td><ol class="upperroman simple" start="8">
+<li><p>Concurrency</p></li>
+</ol>
+</td>
+<td><p><code class="docutils literal notranslate"><span class="pre">asyncio.gather</span></code></p></td>
+</tr>
+<tr class="row-even"><td><ol class="upperroman simple" start="9">
+<li><p>Disposability</p></li>
+</ol>
+</td>
+<td><p>Fast startup</p></td>
+</tr>
+<tr class="row-odd"><td><ol class="upperalpha simple" start="24">
+<li><p>Dev/Prod Parity</p></li>
+</ol>
+</td>
+<td><p>Same environment</p></td>
+</tr>
+<tr class="row-even"><td><ol class="upperroman simple" start="11">
+<li><p>Logs</p></li>
+</ol>
+</td>
+<td><p>Structured logging</p></td>
+</tr>
+<tr class="row-odd"><td><ol class="upperroman simple" start="12">
+<li><p>Admin Processes</p></li>
+</ol>
+</td>
+<td><p>Separate modules</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="usage.html" class="btn btn-neutral float-left" title="Usage" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="api.html" class="btn btn-neutral float-right" title="API Reference" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2026, Job Agent.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
