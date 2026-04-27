@@ -66,6 +66,13 @@ It complements `copilot-instructions.md` by focusing on system-level agents rath
 - **Service**: `services/api`
 - **Module**: `services/api/app.py` (Proxies requests to `services/search`)
 
+### 8. Deployment Agent (DevOps)
+- **Responsibility**: Standardize deployment across environments.
+- **Tools**: Docker Compose, Kubernetes manifests, Helm charts.
+- **Artifacts**: `helm/job-agent`, `k8s/base`, `k8s/overlays`.
+- **12-Factor Alignment**:
+  - Factor X - Keep development, staging, and production as similar as possible.
+
 ---
 
 ## Interaction Model
@@ -77,6 +84,7 @@ It complements `copilot-instructions.md` by focusing on system-level agents rath
   - Dependencies declared explicitly.
   - Logs as streams.
   - Stateless processes.
+- **Test Isolation**: Backend tests are isolated per service to avoid naming collisions (e.g., `app.py`, `config.py`). Use service-specific `PYTHONPATH` during test execution.
 
 ---
 

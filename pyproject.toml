@@ -37,7 +37,7 @@ dev = [
 ]
 
 [tool.pytest.ini_options]
-pythonpath = ["services/api", "services/search", "src"]
+pythonpath = ["src"]
 asyncio_mode = "auto"
 testpaths = ["tests/services/api", "tests/services/search"]
 addopts = "--cov=services/api --cov=services/search --cov-report=term-missing"

@@ -17,6 +17,7 @@
 | **Config Pattern** | 12-Factor App — all config from environment variables |
 | **Async Runtime** | `asyncio` — all backend I/O is async |
 | **HTTP Framework** | FastAPI (Backend) |
+| **Deployment** | Docker Compose, Kubernetes, Helm |
 
 ---
 
@@ -85,8 +86,11 @@ services/
 ## 6. Testing Guidelines
 
 - **Backend**: Use `pytest`. Tests are located in the root `tests/` directory, structured by service (e.g., `tests/services/api`).
+- **Test Isolation**: Due to naming collisions (`app.py`, `config.py`), always run backend tests with a service-specific `PYTHONPATH`.
+  - API: `export PYTHONPATH=$(pwd)/services/api:$(pwd)/src`
+  - Search: `export PYTHONPATH=$(pwd)/services/search:$(pwd)/src`
 - **Frontend**: Use `jest` or `vitest` for component testing.
-- **Integration**: Use `docker-compose` to spin up the full stack for end-to-end testing.
+- **Integration**: Use `docker-compose` or `minikube`/`kind` to spin up the full stack for end-to-end testing.
 
 ---
 
@@ -104,3 +108,4 @@ services/
 - All backend routes must handle `CORS` correctly (configured in `api/app.py`).
 - Use `.env.example` to document required variables across all services.
 - Always use `aiohttp` for backend-to-backend communication.
+- **YAML Linting**: Kubernetes and Helm templates are excluded from standard YAML syntax checks in `pre-commit` due to Go templating. Use `helm lint` for chart validation.
