@@ -67,6 +67,16 @@ class ApplicationRequest(BaseModel):
 # =============================================================================
 # Routes
 # =============================================================================
+@app.get("/")
+async def read_root():
+    return {
+        "service": "Job Agent API",
+        "version": "1.1.0",
+        "docs_url": "/docs",
+        "health_url": "/health",
+    }
+
+
 @app.get("/health")
 async def health():
     return {"status": "healthy", "service": "api-service"}
@@ -133,7 +143,7 @@ async def add_application(app_req: ApplicationRequest):
     raise HTTPException(status_code=409, detail="Already applied")
 
 
-@app.get("/applications/{url}/status")
+@app.get("/applications/{url:path}/status")
 async def get_application_status(url: str):
     tracker = ApplicationTracker()
     apps = tracker.get_applications()
@@ -150,7 +160,7 @@ async def get_application_status(url: str):
     raise HTTPException(status_code=404, detail="Application not found")
 
 
-@app.patch("/applications/{url}/status")
+@app.patch("/applications/{url:path}/status")
 async def update_application_status(url: str, status: str, notes: str = ""):
     tracker = ApplicationTracker()
     success = tracker.update_status(url, status, notes)
