@@ -17,7 +17,8 @@
 | **Config Pattern** | 12-Factor App — all config from environment variables |
 | **Async Runtime** | `asyncio` — all backend I/O is async |
 | **HTTP Framework** | FastAPI (Backend) |
-| **Deployment** | Docker Compose, Kubernetes, Helm |
+| **Deployment** | Docker Compose, Kubernetes, Helm, Windows Standalone (.exe) |
+| **Windows Tools** | Nuitka (Compiler), Inno Setup (Installer), NSSM (Service Manager) |
 
 ---
 

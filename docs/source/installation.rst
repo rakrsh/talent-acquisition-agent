@@ -44,6 +44,27 @@ You should see output like:
 
    2026-04-25 17:15:12 | INFO | job_agent | Job Agent v1.1.0 starting
 
+Windows Installer (.exe)
+------------------------
+
+For users on Windows, a standalone installer is provided that registers the
+services automatically and provides an uninstaller:
+
+1. Download ``JobAgentInstaller.exe`` from the latest GitHub Release.
+2. Double-click the installer and follow the wizard instructions (Administrator
+   privileges required).
+3. The services (API and Search) will be installed as Windows Services.
+4. The Web UI will be accessible at ``http://localhost:8080/ui``.
+
+Uninstallation
+~~~~~~~~~~~~~~
+
+To uninstall the application:
+1. Go to **Settings > Apps > Installed Apps**.
+2. Find **Talent Acquisition Agent** and select **Uninstall**.
+3. The uninstaller will stop and remove the Windows services before deleting files.
+
+
 Development Setup
 -----------------
 

@@ -87,7 +87,7 @@ The easiest way to run the entire stack locally:
 docker-compose up --build
 ```
 
-### Kubernetes & Helm (Production)
+### Kubernetes & Helm (Cloud/Production)
 For production-grade deployments:
 ```bash
 # Using Helm
@@ -97,6 +97,16 @@ helm install job-agent ./helm/job-agent --namespace job-agent --create-namespace
 kubectl apply -k k8s/overlays/prod
 ```
 See [k8s/README.md](k8s/README.md) for detailed instructions.
+
+### Windows Standalone (.exe)
+For a native Windows experience with installation and uninstallation features:
+1. Download `JobAgentInstaller.exe` from the latest GitHub Release.
+2. Run the installer (requires Administrator privileges).
+3. The services will be registered as Windows Services and start automatically.
+4. Access the UI at [http://localhost:8080/ui](http://localhost:8080/ui).
+
+The installer is built using **Nuitka** (Python compilation) and **Inno Setup**.
+
 
 ## 🛠️ Development
 
