@@ -1,0 +1,25 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "job-agent.fullname" . }}-config
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "job-agent.labels" . | nindent 4 }}
+data:
+  DATABASE_URL: {{ .Values.config.databaseUrl | quote }}
+  SEARCH_SERVICE_URL: {{ .Values.config.searchServiceUrl | quote }}
+  NEXT_PUBLIC_API_URL: {{ .Values.config.nextPublicApiUrl | quote }}
+  LOG_LEVEL: {{ .Values.config.logLevel | quote }}
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: {{ include "job-agent.fullname" . }}-secrets
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "job-agent.labels" . | nindent 4 }}
+type: Opaque
+# NOTE: Add secrets via --set or values.yaml in production
+# stringData:
+#   DATABASE_PASSWORD: ""
+#   API_KEYS: ""

@@ -1,0 +1,140 @@
+# Default values for job-agent chart.
+
+replicaCount: 2
+
+image:
+  repository: ghcr.io/your-org/talent-acquisition-agent
+  tag: "1.0"
+  pullPolicy: IfNotPresent
+
+imagePullSecrets: []
+nameOverride: ""
+fullnameOverride: ""
+
+serviceAccount:
+  create: true
+  annotations: {}
+  name: ""
+
+podAnnotations: {}
+
+podSecurityContext: {}
+  # fsGroup: 2000
+
+securityContext: {}
+  # capabilities:
+  #   drop:
+  #   - ALL
+  # readOnlyRootFilesystem: true
+  # runAsNonRoot: true
+  # runAsUser: 1000
+
+service:
+  type: ClusterIP
+  api:
+    port: 8080
+  search:
+    port: 8081
+  web:
+    port: 3000
+  mongodb:
+    port: 27017
+
+ingress:
+  enabled: true
+  className: "nginx"
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /
+    # cert-manager.io/cluster-issuer: "letsencrypt-prod"
+  hosts:
+    - host: job-agent.example.com
+      paths:
+        - path: /api
+          pathType: Prefix
+          service: api
+          servicePort: 8080
+        - path: /search
+          pathType: Prefix
+          service: search
+          servicePort: 8081
+        - path: /
+          pathType: Prefix
+          service: web
+          servicePort: 3000
+  tls: []
+  # - secretName: job-agent-tls
+  #   hosts:
+  #     - job-agent.example.com
+
+resources:
+  api:
+    limits:
+      cpu: 500m
+      memory: 512Mi
+    requests:
+      cpu: 250m
+      memory: 256Mi
+  search:
+    limits:
+      cpu: 500m
+      memory: 512Mi
+    requests:
+      cpu: 250m
+      memory: 256Mi
+  web:
+    limits:
+      cpu: 500m
+      memory: 512Mi
+    requests:
+      cpu: 250m
+      memory: 256Mi
+  mongodb:
+    limits:
+      cpu: 500m
+      memory: 1Gi
+    requests:
+      cpu: 250m
+      memory: 512Mi
+
+autoscaling:
+  enabled: false
+  minReplicas: 2
+  maxReplicas: 10
+  targetCPUUtilizationPercentage: 80
+  targetMemoryUtilizationPercentage: 80
+
+nodeSelector: {}
+
+tolerations: []
+
+affinity: {}
+  # podAntiAffinity:
+  #   preferredDuringSchedulingIgnoredDuringExecution:
+  #   - weight: 100
+  #     podAffinityTerm:
+  #       labelSelector:
+  #         matchExpressions:
+  #         - key: app.kubernetes.io/name
+  #           operator: In
+  #           values:
+  #           - job-agent
+  #       topologyKey: kubernetes.io/hostname
+
+# MongoDB configuration
+mongodb:
+  enabled: true
+  image: mongo:latest
+  volumeSize: 1Gi
+
+# Prometheus monitoring
+prometheus:
+  enabled: false
+  scrape: true
+  port: 9090
+
+# Application config
+config:
+  databaseUrl: "sqlite:///./data/job_agent.db"
+  searchServiceUrl: "http://search-service:8081/search"
+  nextPublicApiUrl: "http://api-service:8080"
+  logLevel: "INFO"

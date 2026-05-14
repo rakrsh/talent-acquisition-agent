@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Talent Acquisition Agent — Architecture</title>
+  <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg: #0d1117; --surface: #161b22; --surface2: #21262d;
+      --border: #30363d; --accent: #58a6ff; --accent4: #d2a8ff;
+      --text: #e6edf3; --muted: #8b949e;
+    }
+    body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; }
+    header { padding: 2rem 2.5rem 1.5rem; border-bottom: 1px solid var(--border); }
+    header h1 { font-size: 1.6rem; font-weight: 700; background: linear-gradient(90deg, var(--accent), var(--accent4)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+    header p { color: var(--muted); font-size: 0.85rem; margin-top: 0.3rem; }
+    .badge { display: inline-block; font-size: 0.72rem; padding: 0.2rem 0.6rem; border-radius: 20px; font-weight: 600; margin-right: 0.4rem; margin-top: 0.6rem; }
+    .badge-blue   { background: #1f6feb33; color: var(--accent); border: 1px solid #1f6feb66; }
+    .badge-green  { background: #23863644; color: #3fb950; border: 1px solid #2ea04366; }
+    .badge-purple { background: #6e40c933; color: var(--accent4); border: 1px solid #6e40c966; }
+    nav { display: flex; gap: 0.25rem; padding: 0.75rem 2.5rem; background: var(--surface); border-bottom: 1px solid var(--border); flex-wrap: wrap; }
+    nav button { background: none; border: 1px solid transparent; color: var(--muted); padding: 0.4rem 1rem; border-radius: 6px; cursor: pointer; font-family: 'Inter', sans-serif; font-size: 0.85rem; transition: all 0.2s; }
+    nav button:hover { color: var(--text); background: var(--surface2); }
+    nav button.active { color: var(--accent); background: #58a6ff22; border-color: var(--accent); }
+    main { padding: 2rem 2.5rem; }
+    .tab-panel { display: none; }
+    .tab-panel.active { display: block; }
+    .card { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 2rem; margin-bottom: 1.5rem; }
+    .card h2 { font-size: 1rem; font-weight: 600; color: var(--accent); margin-bottom: 0.3rem; }
+    .card p  { color: var(--muted); font-size: 0.82rem; margin-bottom: 1.2rem; line-height: 1.5; }
+    .mermaid { background: var(--surface2); border-radius: 8px; padding: 1.5rem; overflow-x: auto; }
+    .grid-2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(480px, 1fr)); gap: 1.5rem; }
+    .legend { display: flex; flex-wrap: wrap; gap: 1rem; margin-top: 1rem; }
+    .legend-item { display: flex; align-items: center; gap: 0.4rem; font-size: 0.78rem; color: var(--muted); }
+    .legend-dot { width: 12px; height: 12px; border-radius: 3px; flex-shrink: 0; }
+    footer { text-align: center; padding: 1.5rem; color: var(--muted); font-size: 0.78rem; border-top: 1px solid var(--border); margin-top: 2rem; }
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>Talent Acquisition Agent — Architecture</h1>
+  <p>Open Source Agentic AI Job Search Engine · 12-Factor App Compliant</p>
+  <div>
+    <span class="badge badge-blue">Python 3.12+</span>
+    <span class="badge badge-green">FastAPI</span>
+    <span class="badge badge-green">asyncio</span>
+    <span class="badge badge-purple">12-Factor</span>
+    <span class="badge badge-blue">uv</span>
+  </div>
+</header>
+
+<nav>
+  <button class="active" onclick="showTab('system',this)">System Overview</button>
+  <button onclick="showTab('flow',this)">Data Flow</button>
+  <button onclick="showTab('api',this)">API Routes</button>
+  <button onclick="showTab('modules',this)">Module Dependencies</button>
+  <button onclick="showTab('deploy',this)">CI/CD &amp; Deploy</button>
+  <button onclick="showTab('factor',this)">12-Factor Map</button>
+</nav>
+
+<main>
+
+<!-- SYSTEM OVERVIEW -->
+<div id="tab-system" class="tab-panel active">
+<div class="card">
+  <h2>System Overview</h2>
+  <p>High-level view of all components: entry points, core modules, external services, and persistence.</p>
+  <div class="mermaid">
+graph TB
+    subgraph Entry["⚡ Entry Points"]
+        CLI["🖥️ CLI · main.py"]
+        HTTP["🌐 HTTP API · server.py"]
+    end
+    subgraph Core["🧠 Core  src/"]
+        Settings["⚙️ settings.py\npydantic-settings"]
+        Config["📋 config.py\nStructured Logger"]
+    end
+    subgraph Modules["📦 src/modules/"]
+        Searcher["🔍 JobSearcher\nasync scraper"]
+        Notifier["🔔 NotificationService\nEmail + SMS"]
+        Tracker["📁 ApplicationTracker\nJSON persistence"]
+    end
+    subgraph External["☁️ External Services"]
+        RemoteOK["Remote OK API"]
+        SMTP["Gmail SMTP"]
+        Twilio["Twilio SMS"]
+    end
+    subgraph Persist["💾 Persistence"]
+        JSON["data/applications.json"]
+        Env[".env · secrets"]
+    end
+
+    CLI & HTTP --> Settings & Config
+    CLI --> Searcher & Notifier & Tracker
+    HTTP --> Searcher & Tracker
+    Searcher --> RemoteOK
+    Notifier --> SMTP & Twilio
+    Tracker --> JSON
+    Settings --> Env
+
+    classDef e fill:#1f6feb,stroke:#58a6ff,color:#fff
+    classDef c fill:#6e40c9,stroke:#d2a8ff,color:#fff
+    classDef m fill:#238636,stroke:#3fb950,color:#fff
+    classDef x fill:#9a6700,stroke:#e3b341,color:#fff
+    classDef p fill:#da3633,stroke:#f85149,color:#fff
+    class CLI,HTTP e
+    class Settings,Config c
+    class Searcher,Notifier,Tracker m
+    class RemoteOK,SMTP,Twilio x
+    class JSON,Env p
+  </div>
+  <div class="legend">
+    <div class="legend-item"><div class="legend-dot" style="background:#1f6feb"></div>Entry Points</div>
+    <div class="legend-item"><div class="legend-dot" style="background:#6e40c9"></div>Core Layer</div>
+    <div class="legend-item"><div class="legend-dot" style="background:#238636"></div>Business Modules</div>
+    <div class="legend-item"><div class="legend-dot" style="background:#9a6700"></div>External Services</div>
+    <div class="legend-item"><div class="legend-dot" style="background:#da3633"></div>Persistence</div>
+  </div>
+</div>
+</div>
+
+<!-- DATA FLOW -->
+<div id="tab-flow" class="tab-panel">
+<div class="card">
+  <h2>Job Search Pipeline — Sequence</h2>
+  <p>End-to-end flow from trigger through scraping, deduplication, notification, and persistence.</p>
+  <div class="mermaid">
+sequenceDiagram
+    actor User
+    participant M as main.py
+    participant S as JobSearcher
+    participant ROK as Remote OK API
+    participant T as ApplicationTracker
+    participant N as NotificationService
+    participant DB as applications.json
+
+    User->>M: run (CLI or GET /jobs)
+    M->>T: get_applications()
+    T->>DB: read
+    DB-->>T: existing records
+    T-->>M: existing URL set
+
+    M->>S: search_all()
+    par asyncio.gather
+        S->>ROK: GET /api?tag={role}
+        ROK-->>S: JSON listings
+    end
+    S-->>M: list[Job]
+
+    M->>M: filter new jobs
+
+    alt New jobs found
+        M->>N: notify_new_jobs(jobs)
+        N-->>User: Email digest + SMS
+        opt AUTO_APPLY_ENABLED
+            M->>T: add_application(job)
+            T->>DB: write
+        end
+    else No new jobs
+        M->>M: log warning
+    end
+    M-->>User: summary
+  </div>
+</div>
+</div>
+
+<!-- API ROUTES -->
+<div id="tab-api" class="tab-panel">
+<div class="card">
+  <h2>FastAPI HTTP API — Route Map</h2>
+  <p>All REST endpoints, their methods, and which module handles them.</p>
+  <div class="mermaid">
+graph LR
+    C["🌐 HTTP Client"]
+
+    subgraph FA["FastAPI · server.py · :8080"]
+        R1["GET /"]
+        R2["GET /health"]
+        R3["GET /jobs"]
+        R4["GET /applications"]
+        R5["POST /applications"]
+        R6["GET /applications/{url}/status"]
+        R7["PATCH /applications/{url}/status"]
+    end
+
+    subgraph D["Module Delegation"]
+        JS["JobSearcher\n.search_all()"]
+        A1["ApplicationTracker\n.get_applications()"]
+        A2["ApplicationTracker\n.add_application()"]
+        A3["ApplicationTracker\n.update_status()"]
+    end
+
+    C --> R1 & R2 & R3 & R4 & R5 & R6 & R7
+    R3 --> JS
+    R4 & R6 --> A1
+    R5 --> A2
+    R7 --> A3
+
+    classDef r fill:#1f6feb,stroke:#58a6ff,color:#fff
+    classDef d fill:#238636,stroke:#3fb950,color:#fff
+    class R1,R2,R3,R4,R5,R6,R7 r
+    class JS,A1,A2,A3 d
+  </div>
+</div>
+</div>
+
+<!-- MODULE DEPS -->
+<div id="tab-modules" class="tab-panel">
+<div class="grid-2">
+<div class="card">
+  <h2>Module Import Graph</h2>
+  <p>Internal dependency relationships between all source files.</p>
+  <div class="mermaid">
+graph TD
+    main["main.py"]
+    server["server.py"]
+    settings["settings.py"]
+    config["config.py"]
+    js["modules/job_search.py"]
+    notif["modules/notifications.py"]
+    tracker["modules/tracker.py"]
+
+    main --> config & settings & js & notif & tracker
+    server --> config & settings & js & tracker
+    js & notif & tracker --> config & settings
+
+    classDef e fill:#1f6feb,stroke:#58a6ff,color:#fff
+    classDef c fill:#6e40c9,stroke:#d2a8ff,color:#fff
+    classDef m fill:#238636,stroke:#3fb950,color:#fff
+    class main,server e
+    class settings,config c
+    class js,notif,tracker m
+  </div>
+</div>
+<div class="card">
+  <h2>Data Model Relationships</h2>
+  <p>Key dataclasses and Pydantic models.</p>
+  <div class="mermaid">
+classDiagram
+    class Job {
+        +str title
+        +str company
+        +str url
+        +str source
+        +str posted_date
+        +bool applied
+        +str search_term
+    }
+    class JobApplication {
+        +str title
+        +str company
+        +str url
+        +str source
+        +str applied_date
+        +str status
+        +str notes
+    }
+    class JobResponse {
+        +str title
+        +str company
+        +str url
+        +str source
+    }
+    class ApplicationRequest {
+        +str title
+        +str company
+        +str url
+        +str source
+    }
+    Job --> JobResponse : serialised as
+    Job --> JobApplication : tracked as
+    ApplicationRequest --> JobApplication : creates
+  </div>
+</div>
+</div>
+</div>
+
+<!-- CI/CD -->
+<div id="tab-deploy" class="tab-panel">
+<div class="card">
+  <h2>CI/CD &amp; Docs Deployment Pipeline</h2>
+  <p>GitHub Actions workflow: versioned Sphinx docs deployed to GitHub Pages.</p>
+  <div class="mermaid">
+flowchart TD
+    subgraph T["🚦 Triggers"]
+        Push["push · main or tag v*"]
+        WD["workflow_dispatch"]
+    end
+    subgraph GHA["⚙️ docs.yml · GitHub Actions"]
+        CO["checkout · fetch-depth 0"]
+        UV["install uv"]
+        VER["version slug\n0.1.0 → 0.1\n0.1.dev0 → dev"]
+        SYNC["uv sync --all-extras"]
+        BUILD["sphinx-build\nsource/ → build/html/{slug}/"]
+        NOJK[".nojekyll + root redirect"]
+        DEPLOY["github-pages-deploy-action\nbranch: gh-pages · clean: false"]
+    end
+    subgraph GP["🌐 GitHub Pages"]
+        ROOT["/ → redirect"]
+        V01["/0.1/"]
+        DEV["/dev/"]
+    end
+
+    Push & WD --> CO --> UV --> VER --> SYNC --> BUILD --> NOJK --> DEPLOY
+    DEPLOY --> ROOT & V01 & DEV
+
+    classDef t fill:#9a6700,stroke:#e3b341,color:#fff
+    classDef s fill:#1f6feb,stroke:#58a6ff,color:#fff
+    classDef p fill:#238636,stroke:#3fb950,color:#fff
+    class Push,WD t
+    class CO,UV,VER,SYNC,BUILD,NOJK,DEPLOY s
+    class ROOT,V01,DEV p
+  </div>
+</div>
+</div>
+
+<!-- 12-FACTOR -->
+<div id="tab-factor" class="tab-panel">
+<div class="card">
+  <h2>12-Factor App Compliance Map</h2>
+  <p>How each factor is implemented in this codebase.</p>
+  <div class="mermaid">
+mindmap
+  root((12-Factor\nJob Agent))
+    I Codebase
+      Single git repo
+      rakrsh/talent-acquisition-agent
+    II Dependencies
+      pyproject.toml
+      uv.lock
+    III Config
+      pydantic-settings
+      ENV vars only
+      .env for local
+    IV Backing Services
+      Remote OK API
+      Gmail SMTP
+      Twilio REST
+    V Build Release Run
+      uv sync
+      uv run
+      CI deploys docs
+    VI Processes
+      Stateless async
+      asyncio.gather
+    VII Port Binding
+      FastAPI on HTTP_PORT
+      Uvicorn self-hosted
+    VIII Concurrency
+      asyncio parallel searches
+    IX Disposability
+      lifespan handler
+      Fast startup
+    X Dev Prod Parity
+      Same uv env
+      ENV_MODE switches format
+    XI Logs
+      JSON in production
+      Human in development
+      stdout only
+    XII Admin Processes
+      tracker.export_csv
+      Standalone scripts
+  </div>
+</div>
+</div>
+
+</main>
+<footer>Talent Acquisition Agent · Architecture Diagrams · Mermaid.js</footer>
+
+<script>
+  mermaid.initialize({
+    startOnLoad: true, theme: 'dark',
+    themeVariables: {
+      darkMode: true, background: '#21262d',
+      primaryColor: '#1f6feb', primaryTextColor: '#e6edf3',
+      primaryBorderColor: '#58a6ff', lineColor: '#58a6ff',
+      secondaryColor: '#6e40c9', tertiaryColor: '#238636',
+      clusterBkg: '#161b22', clusterBorder: '#30363d',
+      fontFamily: 'Inter, sans-serif',
+    },
+    flowchart: { curve: 'basis', padding: 20 },
+    sequence: { actorMargin: 60, mirrorActors: false },
+  });
+
+  function showTab(name, btn) {
+    document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('nav button').forEach(b => b.classList.remove('active'));
+    document.getElementById('tab-' + name).classList.add('active');
+    btn.classList.add('active');
+  }
+</script>
+</body>
+</html>
