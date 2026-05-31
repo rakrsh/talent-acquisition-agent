@@ -61,7 +61,7 @@ async def _get_json(
         async with session.get(url, timeout=_TIMEOUT, headers=_HEADERS, **kwargs) as r:
             if r.status == 200:
                 return await r.json(content_type=None)
-            logger.debug(f"GET {url} → {r.status}")
+            logger.debug(f"GET {_safe_url_for_log(url)} → {r.status}")
     except asyncio.TimeoutError:
         logger.warning(f"Timeout: {_sanitize_url_for_logging(url)}")
     except Exception as exc:
@@ -74,7 +74,7 @@ async def _get_text(session: aiohttp.ClientSession, url: str, **kwargs) -> str |
         async with session.get(url, timeout=_TIMEOUT, headers=_HEADERS, **kwargs) as r:
             if r.status == 200:
                 return await r.text()
-            logger.debug(f"GET {url} → {r.status}")
+            logger.debug(f"GET {_safe_url_for_log(url)} → {r.status}")
     except asyncio.TimeoutError:
         logger.warning(f"Timeout: {_sanitize_url_for_logging(url)}")
     except Exception as exc:
