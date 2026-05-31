@@ -25,6 +25,7 @@ import json
 import xml.etree.ElementTree as ET
 from dataclasses import dataclass
 from pathlib import Path
+from urllib.parse import urlsplit, urlunsplit
 
 import aiohttp
 from config import logger
@@ -40,6 +41,11 @@ _HEADERS = {"User-Agent": "TalentAcquisitionAgent/2.0 (+https://github.com/rakrs
 _TIMEOUT = aiohttp.ClientTimeout(total=20)
 
 
+def _safe_url_for_log(url: str) -> str:
+    parts = urlsplit(url)
+    return urlunsplit((parts.scheme, parts.netloc, parts.path, "", ""))
+
+
 async def _get_json(
     session: aiohttp.ClientSession, url: str, **kwargs
 ) -> dict | list | None:
@@ -47,11 +53,11 @@ async def _get_json(
         async with session.get(url, timeout=_TIMEOUT, headers=_HEADERS, **kwargs) as r:
             if r.status == 200:
                 return await r.json(content_type=None)
-            logger.debug(f"GET {url} → {r.status}")
+            logger.debug(f"GET {_safe_url_for_log(url)} → {r.status}")
     except asyncio.TimeoutError:
-        logger.warning(f"Timeout: {url}")
+        logger.warning(f"Timeout: {_safe_url_for_log(url)}")
     except Exception as exc:
-        logger.error(f"Error fetching {url}: {exc}")
+        logger.error(f"Error fetching {_safe_url_for_log(url)}: {exc}")
     return None
 
 
@@ -60,11 +66,11 @@ async def _get_text(session: aiohttp.ClientSession, url: str, **kwargs) -> str |
         async with session.get(url, timeout=_TIMEOUT, headers=_HEADERS, **kwargs) as r:
             if r.status == 200:
                 return await r.text()
-            logger.debug(f"GET {url} → {r.status}")
+            logger.debug(f"GET {_safe_url_for_log(url)} → {r.status}")
     except asyncio.TimeoutError:
-        logger.warning(f"Timeout: {url}")
+        logger.warning(f"Timeout: {_safe_url_for_log(url)}")
     except Exception as exc:
-        logger.error(f"Error fetching {url}: {exc}")
+        logger.error(f"Error fetching {_safe_url_for_log(url)}: {exc}")
     return None
 
 
