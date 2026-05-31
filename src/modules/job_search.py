@@ -25,6 +25,7 @@ import json
 import xml.etree.ElementTree as ET
 from dataclasses import dataclass
 from pathlib import Path
+from urllib.parse import parse_qsl, urlencode, urlsplit, urlunsplit
 
 import aiohttp
 from config import logger
@@ -40,6 +41,19 @@ _HEADERS = {"User-Agent": "TalentAcquisitionAgent/2.0 (+https://github.com/rakrs
 _TIMEOUT = aiohttp.ClientTimeout(total=20)
 
 
+def _sanitize_url_for_logging(url: str) -> str:
+    """Redact sensitive query parameter values before writing URLs to logs."""
+    sensitive_keys = {"api_key", "apikey", "key", "token", "access_token", "password", "secret"}
+    parts = urlsplit(url)
+    if not parts.query:
+        return url
+    query = parse_qsl(parts.query, keep_blank_values=True)
+    redacted_query = [
+        (k, "***" if k.lower() in sensitive_keys else v) for k, v in query
+    ]
+    return urlunsplit((parts.scheme, parts.netloc, parts.path, urlencode(redacted_query), parts.fragment))
+
+
 async def _get_json(
     session: aiohttp.ClientSession, url: str, **kwargs
 ) -> dict | list | None:
@@ -49,9 +63,9 @@ async def _get_json(
                 return await r.json(content_type=None)
             logger.debug(f"GET {url} → {r.status}")
     except asyncio.TimeoutError:
-        logger.warning(f"Timeout: {url}")
+        logger.warning(f"Timeout: {_sanitize_url_for_logging(url)}")
     except Exception as exc:
-        logger.error(f"Error fetching {url}: {exc}")
+        logger.error(f"Error fetching {_sanitize_url_for_logging(url)}: {exc}")
     return None
 
 
@@ -62,9 +76,9 @@ async def _get_text(session: aiohttp.ClientSession, url: str, **kwargs) -> str |
                 return await r.text()
             logger.debug(f"GET {url} → {r.status}")
     except asyncio.TimeoutError:
-        logger.warning(f"Timeout: {url}")
+        logger.warning(f"Timeout: {_sanitize_url_for_logging(url)}")
     except Exception as exc:
-        logger.error(f"Error fetching {url}: {exc}")
+        logger.error(f"Error fetching {_sanitize_url_for_logging(url)}: {exc}")
     return None
 
 
