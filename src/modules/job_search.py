@@ -42,16 +42,9 @@ _TIMEOUT = aiohttp.ClientTimeout(total=20)
 
 
 def _sanitize_url_for_logging(url: str) -> str:
-    """Redact sensitive query parameter values before writing URLs to logs."""
-    sensitive_keys = {"api_key", "apikey", "key", "token", "access_token", "password", "secret"}
+    """Return a URL safe for logs by stripping query string and fragment."""
     parts = urlsplit(url)
-    if not parts.query:
-        return url
-    query = parse_qsl(parts.query, keep_blank_values=True)
-    redacted_query = [
-        (k, "***" if k.lower() in sensitive_keys else v) for k, v in query
-    ]
-    return urlunsplit((parts.scheme, parts.netloc, parts.path, urlencode(redacted_query), parts.fragment))
+    return urlunsplit((parts.scheme, parts.netloc, parts.path, "", ""))
 
 
 async def _get_json(
