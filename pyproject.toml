@@ -10,7 +10,7 @@ dependencies = [
     "sqlalchemy",
     "pandas",
     "pydantic>=2.0",
-    "pydantic-settings>=2.0",
+    "pydantic-settings>=2.14.2",
     "python-dotenv",
     "aiohttp",
     "beautifulsoup4",
