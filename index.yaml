@@ -3,9 +3,9 @@ entries:
   job-agent:
   - apiVersion: v2
     appVersion: "0.1"
-    created: "2026-07-22T13:05:18.347232062Z"
+    created: "2026-07-25T04:00:32.302690038Z"
     description: A Helm chart for Talent Acquisition Agent (Job Agent)
-    digest: f62d2946b96c7903e443d612ef7b4f14dbce7a13d45666541782106375b6e44c
+    digest: 9466b1405d67160e0e497a35c8d7857feb4f425f579810ef9b002f71bf4ef1d6
     keywords:
     - job
     - recruitment
@@ -19,4 +19,4 @@ entries:
     urls:
     - https://rakrsh.github.io/rakrsh/talent-acquisition-agent/helm/job-agent-0.1.tgz
     version: "0.1"
-generated: "2026-07-22T13:05:18.346542136Z"
+generated: "2026-07-25T04:00:32.301997713Z"
